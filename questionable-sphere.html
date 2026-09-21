@@ -1,0 +1,2738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Questionable Sphere — A World of Questions</title>
+<meta name="description" content="Questionable Sphere is a place where questions float freely and people can discover conversations they might never have found otherwise." />
+<meta name="theme-color" content="#ffffff" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #ffffff;
+    --fg: #0a0a0a;
+    --muted: #888888;
+    --muted-soft: #aaaaaa;
+    --muted-softer: #cccccc;
+    --border: rgba(10, 10, 10, 0.08);
+    --border-strong: rgba(10, 10, 10, 0.18);
+    --panel-bg: #ffffff;
+    --overlay-bg: rgba(255, 255, 255, 0.92);
+    --shadow-soft: 0 30px 80px -30px rgba(0, 0, 0, 0.12);
+    --shadow-deep: 0 20px 60px -20px rgba(0, 0, 0, 0.18), 0 4px 12px -4px rgba(0, 0, 0, 0.06);
+    --sphere-color: #0a0a0a;
+  }
+
+  [data-theme="dark"] {
+    --bg: #050505;
+    --fg: #f0f0f0;
+    --muted: #888888;
+    --muted-soft: #6a6a6a;
+    --muted-softer: #444444;
+    --border: rgba(255, 255, 255, 0.1);
+    --border-strong: rgba(255, 255, 255, 0.22);
+    --panel-bg: #0c0c0c;
+    --overlay-bg: rgba(5, 5, 5, 0.92);
+    --shadow-soft: 0 30px 80px -30px rgba(0, 0, 0, 0.6);
+    --shadow-deep: 0 20px 60px -20px rgba(0, 0, 0, 0.8), 0 4px 12px -4px rgba(0, 0, 0, 0.5);
+    --sphere-color: #f0f0f0;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    font-family: 'Inter', sans-serif;
+    color: var(--fg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    cursor: default;
+    transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1), color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  #canvas {
+    position: fixed;
+    inset: 0;
+    display: block;
+    cursor: grab;
+  }
+  #canvas:active { cursor: grabbing; }
+
+  /* Brand */
+  #brand {
+    position: fixed;
+    top: 40px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-weight: 200;
+    font-size: 11px;
+    letter-spacing: 0.42em;
+    color: var(--fg);
+    pointer-events: none;
+    user-select: none;
+    z-index: 10;
+    opacity: 0.85;
+    transition: color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  #tagline {
+    position: fixed;
+    top: 66px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+    pointer-events: none;
+    user-select: none;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 1.6s ease, color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #tagline.visible { opacity: 1; }
+
+  #controls {
+    position: fixed;
+    bottom: 48px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    z-index: 10;
+  }
+
+  .ctrl-btn {
+    background: transparent;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--fg);
+    cursor: pointer;
+    padding: 10px 4px;
+    position: relative;
+    transition: opacity 0.4s ease, color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0.7;
+  }
+  .ctrl-btn:hover { opacity: 1; }
+  .ctrl-btn::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 4px;
+    height: 1px;
+    background: var(--fg);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .ctrl-btn:hover::after { transform: scaleX(1); }
+
+  #hint {
+    position: fixed;
+    bottom: 100px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--muted-soft);
+    text-transform: uppercase;
+    pointer-events: none;
+    user-select: none;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 2s ease, color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #hint.visible { opacity: 1; }
+  #hint.hidden { opacity: 0; }
+
+  /* ---------- Settings button ---------- */
+  #settings-btn {
+    position: fixed;
+    top: 36px;
+    right: 36px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: transparent;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    z-index: 16;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      border-color 0.45s ease,
+      background-color 0.45s ease,
+      transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 0.45s ease;
+    padding: 0;
+  }
+  #settings-btn:hover {
+    border-color: var(--border-strong);
+    background: var(--panel-bg);
+    box-shadow: 0 8px 28px -12px rgba(0, 0, 0, 0.18);
+  }
+  #settings-btn .dot {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--fg);
+    transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.45s ease, box-shadow 0.45s ease;
+    box-shadow: 0 0 0 0 transparent;
+  }
+  #settings-btn.open {
+    transform: scale(1.05);
+    border-color: var(--border-strong);
+    background: var(--panel-bg);
+  }
+  #settings-btn.open .dot {
+    transform: scale(1.35);
+    box-shadow: 0 0 12px 2px rgba(10, 10, 10, 0.12);
+  }
+  [data-theme="dark"] #settings-btn.open .dot {
+    box-shadow: 0 0 14px 2px rgba(255, 255, 255, 0.18);
+  }
+
+  /* ---------- Liquid disc (settings) ---------- */
+  #settings-panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: min(340px, 88vw);
+    max-height: min(78vh, 560px);
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 36px 28px 28px;
+    z-index: 15;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0.72);
+    transform-origin: center center;
+    transition:
+      opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
+      transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1),
+      background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+      border-radius 0.55s cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 0.55s ease;
+    box-shadow:
+      0 30px 80px -28px rgba(0, 0, 0, 0.22),
+      0 0 0 1px var(--border),
+      inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(18px) saturate(1.15);
+    -webkit-backdrop-filter: blur(18px) saturate(1.15);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  #settings-panel.open {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+    border-radius: 48px;
+  }
+  #settings-panel::-webkit-scrollbar { width: 0; }
+
+  .sp-disc-title {
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-weight: 200;
+    font-size: 9px;
+    letter-spacing: 0.38em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+
+  .sp-section-label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 9px;
+    letter-spacing: 0.32em;
+    color: var(--muted-soft);
+    text-transform: uppercase;
+    padding: 4px 10px 10px;
+    text-align: center;
+    transition: color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .sp-theme-row {
+    display: flex;
+    gap: 8px;
+    padding: 0 6px 14px;
+    justify-content: center;
+  }
+
+  .sp-theme-option {
+    flex: 1;
+    max-width: 110px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 10px 0;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.35s ease, color 1.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .sp-theme-option:hover {
+    color: var(--fg);
+    border-color: var(--border-strong);
+  }
+  .sp-theme-option.active {
+    color: var(--fg);
+    border-color: var(--fg);
+    background: var(--bg);
+  }
+
+  #topic-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 0 6px 14px;
+  }
+  .topic-pill {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.35s ease, color 1.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .topic-pill:hover { color: var(--fg); border-color: var(--border-strong); }
+  .topic-pill.active { color: var(--fg); border-color: var(--fg); background: var(--bg); }
+
+  .sp-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 6px 16px 8px;
+    transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .sp-item {
+    display: block;
+    width: 100%;
+    background: transparent;
+    border: none;
+    text-align: center;
+    padding: 11px 14px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--fg);
+    cursor: pointer;
+    border-radius: 999px;
+    transition:
+      background-color 0.3s ease,
+      color 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.25s ease;
+    text-transform: none;
+  }
+  .sp-item:hover {
+    background: var(--border);
+    transform: scale(1.02);
+  }
+  .sp-item:active {
+    transform: scale(0.98);
+  }
+
+  /* ---------- Search section ---------- */
+  .sp-search-wrap {
+    padding: 4px 10px 10px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), padding 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .sp-search-wrap.open {
+    max-height: 360px;
+    padding: 8px 10px 12px;
+  }
+
+  #search-input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    background: transparent;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 400;
+    font-size: 15px;
+    color: var(--fg);
+    padding: 8px 0;
+    outline: none;
+    transition: border-color 0.3s ease, color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #search-input:focus { border-bottom-color: var(--fg); }
+  #search-input::placeholder { color: var(--muted-softer); font-style: italic; }
+
+  #search-results {
+    margin-top: 8px;
+    max-height: 220px;
+    overflow-y: auto;
+  }
+  #search-results::-webkit-scrollbar { width: 0; }
+
+  .search-result {
+    display: block;
+    width: 100%;
+    background: transparent;
+    border: none;
+    text-align: left;
+    padding: 9px 10px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--fg);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.25s ease, color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 2px;
+  }
+  .search-result:hover {
+    background: var(--border);
+  }
+  .search-empty {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 12px;
+    color: var(--muted-soft);
+    padding: 10px;
+    text-align: center;
+    transition: color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ---------- Question panel ---------- */
+  #panel {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(480px, 86vw);
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    padding: 44px 40px 36px;
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-soft);
+    border-radius: 2px;
+  }
+  #panel.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  #panel-close {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: var(--muted);
+    cursor: pointer;
+    font-weight: 200;
+    line-height: 1;
+    padding: 6px;
+    transition: color 0.3s ease;
+  }
+  #panel-close:hover { color: var(--fg); }
+
+  #panel-question {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 1.45;
+    color: var(--fg);
+    letter-spacing: 0.005em;
+    margin-bottom: 8px;
+    min-height: 1.4em;
+    transition: color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  #panel-meta {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    color: var(--muted-soft);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    transition: color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  #panel-divider {
+    width: 24px;
+    height: 1px;
+    background: var(--muted-softer);
+    margin: 0 0 20px 0;
+    transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  #panel-report {
+    background: none;
+    border: none;
+    font: inherit;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--muted-softer);
+    cursor: pointer;
+    text-transform: uppercase;
+    padding: 0;
+    margin-left: 10px;
+    opacity: 0.7;
+  }
+  #panel-report:hover { opacity: 1; color: var(--muted); }
+
+  #panel-replies {
+    max-height: 180px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+  }
+  #panel-replies:empty { margin-bottom: 0; }
+  .panel-reply-item {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 1.5;
+    color: var(--fg);
+    opacity: 0.85;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .panel-reply-item.nested { margin-left: 18px; opacity: 0.7; }
+  .panel-replies-empty {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--muted-softer);
+    font-style: italic;
+    padding: 6px 0 14px;
+  }
+
+  #panel-reply-label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    transition: color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  #panel-reply {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    background: transparent;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.5;
+    color: var(--fg);
+    padding: 8px 0;
+    outline: none;
+    resize: none;
+    transition: border-color 0.3s ease, color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    min-height: 48px;
+  }
+  #panel-reply:focus { border-bottom-color: var(--fg); }
+  #panel-reply::placeholder { color: var(--muted-softer); font-style: italic; }
+
+  #panel-submit {
+    margin-top: 20px;
+    background: transparent;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--fg);
+    cursor: pointer;
+    padding: 8px 0;
+    opacity: 0.5;
+    transition: opacity 0.3s ease, color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #panel-submit:hover { opacity: 1; }
+
+  /* ---------- Leave modal ---------- */
+  #leave {
+    position: fixed;
+    inset: 0;
+    background: var(--overlay-bg);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease, background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #leave.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  #leave-inner {
+    width: min(520px, 88vw);
+    text-align: center;
+    padding: 40px;
+  }
+
+  #leave-label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 200;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    transition: color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  #leave-input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--border-strong);
+    background: transparent;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: 26px;
+    line-height: 1.4;
+    color: var(--fg);
+    padding: 12px 0;
+    outline: none;
+    text-align: center;
+    transition: border-color 0.3s ease, color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #leave-input:focus { border-bottom-color: var(--fg); }
+  #leave-input::placeholder { color: var(--muted-softer); font-style: italic; }
+
+  #leave-actions {
+    margin-top: 32px;
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+  }
+
+  .leave-btn {
+    background: transparent;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--fg);
+    cursor: pointer;
+    padding: 8px 0;
+    opacity: 0.5;
+    transition: opacity 0.3s ease, color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .leave-btn:hover { opacity: 1; }
+  .leave-btn.primary { opacity: 0.9; }
+
+  /* ---------- Contact modal with mini sphere ---------- */
+  #contact {
+    position: fixed;
+    inset: 0;
+    background: var(--overlay-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease, background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #contact.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  #contact-canvas-wrap {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  #contact-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  #contact-inner {
+    position: relative;
+    z-index: 1;
+    width: min(520px, 88vw);
+    text-align: center;
+    padding: 48px 40px;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: var(--shadow-deep);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  #contact-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 200;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    transition: color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  #contact-subtitle {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 17px;
+    color: var(--fg);
+    margin-bottom: 28px;
+    letter-spacing: 0.01em;
+    transition: color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  #contact-input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px solid var(--border-strong);
+    background: transparent;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-style: italic;
+    font-size: 20px;
+    line-height: 1.45;
+    color: var(--fg);
+    padding: 14px 0;
+    outline: none;
+    text-align: center;
+    transition: border-color 0.3s ease, color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #contact-input:focus { border-bottom-color: var(--fg); }
+  #contact-input::placeholder {
+    color: var(--muted-softer);
+    font-style: italic;
+  }
+
+  #contact-actions {
+    margin-top: 32px;
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+  }
+
+  .contact-btn {
+    background: transparent;
+    border: none;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--fg);
+    cursor: pointer;
+    padding: 8px 0;
+    opacity: 0.5;
+    transition: opacity 0.3s ease, color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .contact-btn:hover { opacity: 1; }
+  .contact-btn.primary { opacity: 0.9; }
+
+  #contact-note {
+    margin-top: 24px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 12px;
+    color: var(--muted-soft);
+    letter-spacing: 0.02em;
+    transition: color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* ---------- Liquid theme transition overlay ---------- */
+  #theme-wipe {
+    position: fixed;
+    pointer-events: none;
+    border-radius: 50%;
+    z-index: 9999;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+
+  /* ---------- Toast ---------- */
+  #toast {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 16px;
+    color: var(--fg);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 40;
+    transition: opacity 0.8s ease, color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.02em;
+    background: var(--panel-bg);
+    padding: 14px 26px;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    box-shadow: var(--shadow-soft);
+  }
+  #toast.show { opacity: 1; }
+
+  .point-hover { cursor: pointer !important; }
+
+  /* ---------- Minimal footer ---------- */
+  #site-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 12;
+    padding: 12px 20px 16px;
+    text-align: center;
+    pointer-events: none;
+  }
+  #site-footer .footer-inner { pointer-events: auto; }
+  .footer-copy {
+    font-family: 'Inter', sans-serif;
+    font-weight: 200;
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--muted-soft);
+    opacity: 0.75;
+  }
+
+  #page-view {
+    position: fixed;
+    inset: 0;
+    z-index: 25;
+    background: var(--overlay-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    opacity: 0;
+    pointer-events: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: opacity 0.45s ease, background-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  #page-view.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .page-sheet {
+    width: min(720px, 92vw);
+    margin: 0 auto;
+    padding: 88px 8px 80px;
+  }
+  .page-kicker {
+    font-family: 'Inter', sans-serif;
+    font-weight: 200;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .page-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 300;
+    font-size: clamp(28px, 5vw, 40px);
+    line-height: 1.25;
+    color: var(--fg);
+    margin-bottom: 10px;
+  }
+  .page-lead {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+  .page-body h2 {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 11px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--fg);
+    margin: 28px 0 10px;
+  }
+  .page-body p, .page-body li {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--fg);
+    opacity: 0.88;
+  }
+  .page-body p { margin-bottom: 12px; }
+  .page-body ul { padding-left: 18px; margin-bottom: 12px; }
+  .page-body li { margin-bottom: 6px; }
+  .page-note {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 14px;
+    color: var(--muted);
+    margin: 16px 0;
+  }
+  .page-meta {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted-soft);
+    margin-top: 28px;
+  }
+  .page-close {
+    position: sticky;
+    top: 18px;
+    float: right;
+    background: none;
+    border: none;
+    font-size: 22px;
+    font-weight: 200;
+    color: var(--muted);
+    cursor: pointer;
+    line-height: 1;
+    padding: 6px;
+    z-index: 2;
+  }
+  .page-close:hover { color: var(--fg); }
+  .page-section { display: none; }
+  .page-section.active { display: block; }
+  .faq-item { margin-bottom: 22px; }
+  .faq-q {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
+    font-size: 20px;
+    margin-bottom: 6px;
+    color: var(--fg);
+  }
+  .api-preview {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin: 12px 0 20px;
+    background: var(--panel-bg);
+  }
+  .api-preview code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--fg);
+    display: block;
+    margin: 4px 0;
+  }
+  .coming-soon {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    border: 1px solid var(--border-strong);
+    padding: 5px 10px;
+    border-radius: 20px;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  body.page-open #controls,
+  body.page-open #hint,
+  body.page-open #brand,
+  body.page-open #tagline { opacity: 0; pointer-events: none; }
+
+  @media (max-width: 600px) {
+    #brand { top: 28px; font-size: 10px; }
+    #tagline { top: 52px; font-size: 11px; }
+    #controls { bottom: 40px; gap: 24px; }
+    .ctrl-btn { font-size: 10px; }
+    #hint { bottom: 90px; font-size: 9px; }
+    #panel { padding: 36px 28px 28px; }
+    #panel-question { font-size: 20px; }
+    #leave-input { font-size: 22px; }
+    #settings-btn { top: 24px; right: 20px; width: 36px; height: 36px; }
+    #settings-panel {
+      width: min(300px, 90vw);
+      padding: 28px 18px 22px;
+      border-radius: 36px;
+    }
+    #settings-panel.open { border-radius: 36px; }
+    #contact-inner { padding: 40px 24px; }
+    #contact-input { font-size: 18px; }
+    #contact-subtitle { font-size: 15px; }
+    .page-sheet { padding: 72px 4px 96px; }
+  }
+</style>
+</head>
+<body data-theme="light">
+
+<div id="brand">QUESTIONABLE SPHERE</div>
+<div id="tagline">a world of questions, floating</div>
+
+<canvas id="canvas"></canvas>
+
+<div id="hint">scroll to zoom · click a point</div>
+
+<div id="controls">
+  <button class="ctrl-btn" id="btn-leave">Leave something</button>
+  <button class="ctrl-btn" id="btn-random">Take me somewhere</button>
+</div>
+
+<button id="settings-btn" aria-label="Settings">
+  <span class="dot"></span>
+</button>
+
+<div id="settings-panel" aria-label="Menu disc">
+  <div class="sp-disc-title">Menu</div>
+  <div class="sp-section-label">Theme</div>
+  <div class="sp-theme-row">
+    <button class="sp-theme-option active" data-theme-value="light">Light</button>
+    <button class="sp-theme-option" data-theme-value="dark">Dark</button>
+  </div>
+  <div class="sp-divider"></div>
+  <button class="sp-item" id="sp-search-toggle">Search</button>
+  <div class="sp-search-wrap" id="search-wrap">
+    <input id="search-input" type="text" placeholder="a word, a feeling..." autocomplete="off" />
+    <div id="search-results"></div>
+  </div>
+  <div class="sp-divider"></div>
+  <div class="sp-section-label">Topics</div>
+  <div id="topic-row"></div>
+  <div class="sp-divider"></div>
+  <button class="sp-item" id="sp-home">Home</button>
+  <button class="sp-item" data-page="about">About</button>
+  <button class="sp-item" data-page="faq">FAQ</button>
+  <button class="sp-item" data-page="guidelines">Guidelines</button>
+  <button class="sp-item" data-page="privacy">Privacy</button>
+  <button class="sp-item" data-page="terms">Terms</button>
+  <button class="sp-item" data-page="api">API</button>
+  <button class="sp-item" id="sp-contact">Contact</button>
+</div>
+
+<div id="panel">
+  <button id="panel-close">×</button>
+  <div id="panel-question"></div>
+  <div id="panel-meta">a question, somewhere <button id="panel-report" title="report this question">report</button></div>
+  <div id="panel-divider"></div>
+  <div id="panel-replies"></div>
+  <div id="panel-reply-label">leave a thought</div>
+  <textarea id="panel-reply" rows="2" placeholder="answer, or simply sit with it..."></textarea>
+  <button id="panel-submit">send quietly</button>
+</div>
+
+<div id="leave">
+  <div id="leave-inner">
+    <div id="leave-label">leave something in the sphere</div>
+    <input id="leave-input" type="text" placeholder="a question, a thought, a word..." maxlength="200" />
+    <div id="leave-actions">
+      <button class="leave-btn" id="leave-cancel">nevermind</button>
+      <button class="leave-btn primary" id="leave-submit">place it</button>
+    </div>
+  </div>
+</div>
+
+<div id="contact">
+  <div id="contact-canvas-wrap">
+    <canvas id="contact-canvas"></canvas>
+  </div>
+  <div id="contact-inner">
+    <div id="contact-title">Contact Questionable Sphere</div>
+    <div id="contact-subtitle">What would you like to tell us?</div>
+    <input id="contact-input" type="text" placeholder="“your question or message…”" maxlength="500" />
+    <div id="contact-actions">
+      <button class="contact-btn" id="contact-cancel">close</button>
+      <button class="contact-btn primary" id="contact-submit">send</button>
+    </div>
+    <div id="contact-note">a quiet line, left in a smaller sphere.</div>
+  </div>
+</div>
+
+<footer id="site-footer">
+  <div class="footer-inner">
+    <div class="footer-copy">Questionable Sphere</div>
+  </div>
+</footer>
+
+<div id="page-view" role="dialog" aria-modal="true" aria-labelledby="page-title">
+  <div class="page-sheet">
+    <button class="page-close" id="page-close" type="button" aria-label="Close page">×</button>
+
+    <section class="page-section" id="page-about" data-title="About Questionable Sphere">
+      <div class="page-kicker">About</div>
+      <h1 class="page-title" id="page-title-about">A world of questions, floating.</h1>
+      <p class="page-lead">Questionable Sphere is a place where questions float freely and people can discover conversations they might never have found otherwise.</p>
+      <div class="page-body">
+        <h2>The idea</h2>
+        <p>Most conversation online is arranged as a feed: newest first, loudest first. Questionable Sphere is arranged as a small world. Questions appear as points on a sphere. You turn it, zoom, and arrive somewhere you did not plan to go.</p>
+        <p>The product is meant to feel quiet. There is no traditional account required to look around. There is no score, no follower graph, and no advertising layer in this prototype.</p>
+        <h2>How it feels</h2>
+        <p>You can leave a question, sit with someone else’s, send a short reply, or ask to be taken somewhere at random. Search exists for when a word is already in mind. Themes exist so the room can be light or dark.</p>
+        <h2>What this version is</h2>
+        <p>This is a frontend-first prototype. The sphere, the motion, and the pages you are reading live in the browser. Optional local storage may remember questions and theme choice on your device. A production backend is planned; it is not the current experience.</p>
+        <p>Questionable Sphere is not trying to replace every kind of conversation. It is trying to make a few questions easier to find, and a few thoughts easier to leave behind.</p>
+      </div>
+    </section>
+
+    <section class="page-section" id="page-faq" data-title="Questionable Sphere FAQ">
+      <div class="page-kicker">FAQ</div>
+      <h1 class="page-title">Questions about the sphere</h1>
+      <p class="page-lead">Short answers that match what the product does today.</p>
+      <div class="page-body">
+        <div class="faq-item"><div class="faq-q">What is Questionable Sphere?</div><p>A visual place for questions. Each point on the sphere is a thought you can open, sit with, or answer.</p></div>
+        <div class="faq-item"><div class="faq-q">Do I need an account?</div><p>No. You can explore, leave a question, reply, search, and contact the project without creating an account.</p></div>
+        <div class="faq-item"><div class="faq-q">Do I need an email address?</div><p>Not for ordinary use of this prototype. A future API may require an email if you request developer access.</p></div>
+        <div class="faq-item"><div class="faq-q">How long does a question stay visible?</div><p>In this prototype, questions stay in the local sphere until you clear your browser data. A later version may use a public visibility window (for example, a few days). Leaving public view would not automatically mean every copy is erased from every system.</p></div>
+        <div class="faq-item"><div class="faq-q">Can I submit anonymously?</div><p>Yes. This version does not ask for your name, email, or password to leave a question.</p></div>
+        <div class="faq-item"><div class="faq-q">How does the sphere work?</div><p>It is a 3D object you can rotate a full 360° and zoom. Points are placed on the surface. Click a point to open it. The camera can travel to that point.</p></div>
+        <div class="faq-item"><div class="faq-q">Can I search questions?</div><p>Yes. Open settings and choose “Search the sphere.” Matching points can be opened directly.</p></div>
+        <div class="faq-item"><div class="faq-q">How does random discovery work?</div><p>“Take me somewhere” chooses a question you have not just seen, flies the camera there, and opens it.</p></div>
+        <div class="faq-item"><div class="faq-q">How can I report something?</div><p>Use Contact Us and describe what you saw. A dedicated report system is planned for a later backend. There is no guaranteed moderation pipeline in this prototype.</p></div>
+        <div class="faq-item"><div class="faq-q">Will there be an API?</div><p>It is planned. See the API page. Endpoints shown there are a preview, not a live service.</p></div>
+        <div class="faq-item"><div class="faq-q">Does Questionable Sphere use tracking cookies?</div><p>This prototype does not intentionally use cookies for advertising or behavioral tracking. The browser may still store a theme preference and locally saved questions. Hosting platforms can use necessary technical cookies that we do not control from this file.</p></div>
+      </div>
+    </section>
+
+    <section class="page-section" id="page-guidelines" data-title="Questionable Sphere Community Guidelines">
+      <div class="page-kicker">Community</div>
+      <h1 class="page-title">Guidelines</h1>
+      <p class="page-lead">The sphere is for questions and conversations. Keep it habitable.</p>
+      <div class="page-body">
+        <h2>Please</h2>
+        <ul>
+          <li>Be respectful, even when the question is sharp.</li>
+          <li>Leave room for people you do not know.</li>
+          <li>Protect privacy — yours and others’.</li>
+          <li>Report content that feels harmful.</li>
+        </ul>
+        <h2>Do not</h2>
+        <ul>
+          <li>Harass, threaten, or bully anyone.</li>
+          <li>Post hate directed at people or groups.</li>
+          <li>Share sexual exploitation or any sexual content involving minors.</li>
+          <li>Post illegal content, or instructions meant to cause serious harm.</li>
+          <li>Spam, scam, impersonate, or drop malicious links.</li>
+          <li>Share someone else’s private information.</li>
+        </ul>
+        <h2>If something is wrong</h2>
+        <p>Use Contact Us to tell us. Content may be hidden or removed when necessary. This prototype does not yet have a full moderation desk; we still ask you to write as if a person is on the other side of the point.</p>
+      </div>
+    </section>
+
+    <section class="page-section" id="page-privacy" data-title="Questionable Sphere Privacy Policy">
+      <div class="page-kicker">Privacy</div>
+      <h1 class="page-title">Privacy Policy</h1>
+      <p class="page-lead">A first draft for the current product direction. Last updated: [Effective Date].</p>
+      <div class="page-body">
+        <p>Questionable Sphere is designed to minimize the personal information required to use the service. This page describes intended behavior. It is not a claim that the product collects nothing at all.</p>
+        <h2>Who we are</h2>
+        <p>This service is operated by [Company / Operator Name] ([Legal Entity]). Contact: [Contact Email]. Jurisdiction: [Jurisdiction].</p>
+        <h2>Ordinary use of the sphere</h2>
+        <p>No email address is required. No password is required. No traditional account is required. You may explore, leave a question, and reply without creating an account.</p>
+        <p>Questions and replies you submit are user-generated content. In this prototype they may remain in your browser (for example via local storage). If a production backend is connected later, submitted text may be stored on servers so other people can see it while it is publicly active.</p>
+        <p>We do not intentionally use cookies for advertising or behavioral tracking. We do not intentionally sell personal information.</p>
+        <p>Your browser or device may still keep technical data that any website can encounter: theme preference, local copies of questions you left, and ordinary connection metadata seen by a host (such as IP address in server logs) if the file is served from the internet.</p>
+        <h2>API users (future)</h2>
+        <p>API access is not live. If an API account is offered later, that path is different from anonymous sphere use. An API account may require an email address, account details, credentials, and usage information needed to operate and secure the API. That collection would apply to API users, not to everyone who only turns the sphere.</p>
+        <h2>Service providers</h2>
+        <p>Infrastructure used to host or deliver the site may process limited information necessary to keep the service running. This draft does not list specific vendors because they may change.</p>
+        <h2>Retention</h2>
+        <p>Questions may have a public visibility period in a later version. Expiration from public discovery does not necessarily mean immediate, permanent deletion from every system. This prototype does not promise permanent deletion.</p>
+        <h2>Security</h2>
+        <p>Reasonable technical and organizational measures may be used as the product matures. No service is 100% secure. This frontend prototype should not be treated as a production security system.</p>
+        <h2>Children</h2>
+        <p>Questionable Sphere is not directed at young children. If you believe a child has submitted personal information, contact [Contact Email]. Age requirements may be stated more precisely when a legal entity is confirmed.</p>
+        <h2>Changes</h2>
+        <p>This policy may be updated as the product evolves. The date above will change when it does.</p>
+        <p class="page-meta">Draft · replace placeholders before publishing as a legal document.</p>
+      </div>
+    </section>
+
+    <section class="page-section" id="page-terms" data-title="Questionable Sphere Terms of Use">
+      <div class="page-kicker">Terms</div>
+      <h1 class="page-title">Terms of Use</h1>
+      <p class="page-lead">A first draft. Last updated: [Effective Date].</p>
+      <div class="page-body">
+        <h2>Acceptance</h2>
+        <p>By using Questionable Sphere you agree to these terms. If you do not agree, do not use the service. Operator: [Company / Operator Name], [Contact Email], [Jurisdiction].</p>
+        <h2>The service</h2>
+        <p>Questionable Sphere is a visual conversation space. This version is a frontend prototype. Features, availability, and storage may change.</p>
+        <h2>Anonymous participation</h2>
+        <p>You may use the sphere without an account. You remain responsible for what you submit.</p>
+        <h2>User-generated content</h2>
+        <p>Questions, replies, and contact messages are your content. You grant the operator a limited license to display and moderate that content as needed to run the service. You represent that you have the right to submit it.</p>
+        <h2>Prohibited behavior</h2>
+        <p>Do not harass, threaten, exploit, spam, scam, impersonate, distribute illegal material, or share private information about others. See Community Guidelines.</p>
+        <h2>Moderation and reporting</h2>
+        <p>Content may be removed or restricted. Reporting currently happens through Contact Us. There is no guarantee of a particular response time in this prototype.</p>
+        <h2>Availability</h2>
+        <p>The service may be interrupted, incomplete, or experimental. It is offered as-is.</p>
+        <h2>Intellectual property</h2>
+        <p>The Questionable Sphere name, design, and software remain with the operator except for the license you grant in your own submissions.</p>
+        <h2>Third parties</h2>
+        <p>Fonts, libraries, and hosting providers are third-party services with their own terms.</p>
+        <h2>API</h2>
+        <p>A public API is planned and not currently provided. Future API use may require a separate account and additional terms.</p>
+        <h2>Suspension</h2>
+        <p>Access may be limited if these terms or the guidelines are broken, or if the service is taken offline.</p>
+        <h2>Disclaimers and liability</h2>
+        <p>The service is provided without warranties of uninterrupted, error-free, or fit-for-purpose operation, to the extent permitted by law. Liability is limited to the fullest extent permitted by applicable law. Nothing here excludes liability that cannot legally be excluded.</p>
+        <h2>Changes</h2>
+        <p>These terms may change. Continued use after an update means you accept the revised terms.</p>
+        <h2>Contact</h2>
+        <p>[Contact Email]</p>
+        <p class="page-meta">Draft · not legal advice · placeholders must be completed.</p>
+      </div>
+    </section>
+
+    <section class="page-section" id="page-api" data-title="Questionable Sphere API">
+      <div class="page-kicker">Developers</div>
+      <h1 class="page-title">API</h1>
+      <div class="coming-soon">API — Coming Soon</div>
+      <p class="page-lead">A preview of how developers and businesses might one day work with the sphere.</p>
+      <div class="page-body">
+        <p>There is no live API in this prototype. No keys are issued. The examples below are planned documentation, not working endpoints.</p>
+        <h2>Possible future uses</h2>
+        <ul>
+          <li>Create and retrieve questions</li>
+          <li>Build question-based experiences</li>
+          <li>Embed a sphere</li>
+          <li>Create private or brand-specific spheres</li>
+          <li>Read conversation data only with the right permissions</li>
+        </ul>
+        <h2>Planned shape (preview)</h2>
+        <div class="api-preview">
+          <code>Authentication — API account + email (not available yet)</code>
+          <code>GET /questions</code>
+          <code>GET /questions/:id</code>
+          <code>POST /questions</code>
+          <code>GET /topics</code>
+        </div>
+        <p>When an API exists, access will require an API account and an email address. Ordinary visitors to the sphere will still be able to explore without that account.</p>
+        <p class="page-note">Do not treat this page as a promise of dates, pricing, or exact routes.</p>
+      </div>
+    </section>
+  </div>
+</div>
+
+<div id="theme-wipe"></div>
+<div id="toast"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ============================================================
+// Supabase configuration
+// Backend: Supabase Postgres + RLS + RPC (reads) + Edge Functions (writes).
+// ============================================================
+// LIVE BACKEND — Railway → Supabase
+// Browser never talks to Supabase directly. No service-role key here.
+// ============================================================
+const API_BASE_URL = "https://effective-pancake-production.up.railway.app";
+
+async function apiRequest(path, options = {}) {
+  const opts = { ...options };
+  const headers = {
+    "Content-Type": "application/json",
+    ...(opts.headers || {})
+  };
+  delete opts.headers;
+  let res;
+  try {
+    res = await fetch(`${API_BASE_URL}${path}`, { ...opts, headers });
+  } catch (err) {
+    throw new Error("could not reach the sphere. please try again.");
+  }
+  let data = null;
+  try { data = await res.json(); } catch (e) { data = null; }
+  if (!res.ok) {
+    const msg =
+      (data && (data.error || data.message)) ||
+      `Request failed (${res.status})`;
+    throw new Error(msg);
+  }
+  return data;
+}
+
+/** Normalize Railway envelope { success, data } → payload */
+function apiData(res) {
+  if (res == null) return null;
+  if (res.data !== undefined) return res.data;
+  return res;
+}
+
+// Soft health check — does not block the UI
+(async function checkBackendHealth() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/health`, { method: "GET" });
+    const data = await res.json().catch(() => null);
+    if (!res.ok || (data && data.ok === false)) {
+      console.warn("[qs] backend health:", data || res.status);
+    } else {
+      console.log("[qs] backend connected", API_BASE_URL);
+    }
+  } catch (err) {
+    console.warn("[qs] backend unreachable at", API_BASE_URL, err.message);
+  }
+})();
+
+
+// ============================================================
+// DATA LAYER — backend-driven, bounded working set
+// ------------------------------------------------------------
+// The database can hold anywhere from 100 to 1,000,000+ questions.
+// `allQuestions` is NEVER the whole database — it is a small local
+// *working set* (capped at WORKING_SET_CAP) made only of questions the
+// backend has explicitly handed to this browser: the initial batch, plus
+// anything surfaced afterward via "Take Me Somewhere", search, topic
+// browsing, or a question the person just left themselves.
+//
+// The 3D sphere, in turn, only ever renders VISIBLE_POOL_SIZE (48) points
+// out of that working set — see computeVisibleIndices()/syncVisiblePoints()
+// below (unchanged from the original prototype). So no matter how large
+// the database grows, the browser downloads a small bounded slice and
+// Three.js only ever holds ~48 point objects.
+// ============================================================
+const VISIBLE_POOL_SIZE = 48; // how many dots are visible on the sphere at once
+const WORKING_SET_CAP = 160;  // local cache ceiling — NOT the database size
+const RECENT_RANDOM_SIZE = 8; // avoid repeating recent random picks
+
+let allQuestions = [];            // working set: { id, text, position }
+let visibleIndices = new Set();   // indices into allQuestions currently on the sphere
+let recentRandomIds = [];         // most-recent last; sent to the backend to skip repeats
+let currentTopicSlug = null;      // active topic filter, or null for "all"
+
+function toClientQuestion(row) {
+  return { id: row.id, text: row.text, position: new THREE.Vector3(row.x, row.y, row.z) };
+}
+
+function rememberRecent(id) {
+  recentRandomIds = recentRandomIds.filter(x => x !== id);
+  recentRandomIds.push(id);
+  if (recentRandomIds.length > RECENT_RANDOM_SIZE) recentRandomIds.shift();
+}
+
+// Add a freshly-fetched question row into the local working set (if not
+// already present), evicting an off-screen entry if we're at the cap.
+// Returns its index in allQuestions.
+function upsertWorkingSet(row) {
+  const existingIdx = allQuestions.findIndex(q => q.id === row.id);
+  if (existingIdx !== -1) return existingIdx;
+
+  if (allQuestions.length >= WORKING_SET_CAP) {
+    const evictIdx = [...allQuestions.keys()].find(i => !visibleIndices.has(i));
+    if (evictIdx !== undefined) {
+      allQuestions.splice(evictIdx, 1);
+      visibleIndices = new Set([...visibleIndices].map(i => (i > evictIdx ? i - 1 : i)));
+    }
+  }
+  allQuestions.push(toClientQuestion(row));
+  return allQuestions.length - 1;
+}
+
+// Initial load: one small, backend-chosen, randomly-ordered batch — never
+// the whole table, never an unbounded `.limit(10000)`.
+async function fetchInitialBatch() {
+  try {
+    let path = `/api/questions?limit=${VISIBLE_POOL_SIZE}`;
+    if (currentTopicSlug) path += `&topic=${encodeURIComponent(currentTopicSlug)}`;
+    const res = await apiRequest(path);
+    const payload = apiData(res) || {};
+    const list = payload.questions || payload || [];
+    allQuestions = (Array.isArray(list) ? list : []).map(toClientQuestion);
+  } catch (err) {
+    console.warn('initial batch failed', err);
+    allQuestions = [];
+    if (typeof showToast === 'function') {
+      showToast(err.message || 'could not load questions. please try again.');
+    }
+  }
+}
+
+// "Take Me Somewhere" — the backend selects the question, not the browser.
+async function fetchRandomQuestion() {
+  try {
+    let path = '/api/questions/random';
+    const exclude = recentRandomIds.filter(Boolean);
+    if (exclude.length) path += `?exclude=${exclude.map(encodeURIComponent).join(',')}`;
+    const res = await apiRequest(path);
+    const payload = apiData(res) || {};
+    return payload.question || payload || null;
+  } catch (err) {
+    console.warn('random question failed', err);
+    return null;
+  }
+}
+
+// Database-backed search — operates over every active question in
+// Postgres, never just the ~48 points currently on screen.
+async function fetchSearchResults(query) {
+  if (!query) return [];
+  try {
+    let path = `/api/questions/search?q=${encodeURIComponent(query)}&limit=8`;
+    const res = await apiRequest(path);
+    const payload = apiData(res) || {};
+    return payload.questions || [];
+  } catch (err) {
+    console.warn('search failed', err);
+    return [];
+  }
+}
+
+async function fetchReplies(questionId) {
+  try {
+    const res = await apiRequest(`/api/questions/${encodeURIComponent(questionId)}/replies`);
+    const payload = apiData(res) || {};
+    return payload.replies || [];
+  } catch (err) {
+    console.warn('fetch replies failed', err);
+    return [];
+  }
+}
+
+async function fetchTopics() {
+  try {
+    const res = await apiRequest('/api/topics');
+    const payload = apiData(res) || {};
+    return payload.topics || [];
+  } catch (err) {
+    console.warn('fetch topics failed', err);
+    return [];
+  }
+}
+
+// Visibility algorithm: select a balanced subset of the (small) working set
+function computeVisibleIndices() {
+  const n = allQuestions.length;
+  if (n === 0) { visibleIndices.clear(); return; }
+  if (n <= VISIBLE_POOL_SIZE) {
+    visibleIndices = new Set(allQuestions.map((_, i) => i));
+    return;
+  }
+
+  // Strategy: Fibonacci-sample across the whole working set for even coverage
+  const selected = new Set();
+  const step = n / VISIBLE_POOL_SIZE;
+  for (let k = 0; k < VISIBLE_POOL_SIZE; k++) {
+    const idx = Math.floor((k * step) % n);
+    selected.add(idx);
+  }
+
+  // Always include the most recent additions (last 6)
+  for (let k = Math.max(0, n - 6); k < n; k++) selected.add(k);
+
+  visibleIndices = selected;
+}
+
+function ensureVisible(questionId) {
+  const idx = allQuestions.findIndex(q => q.id === questionId);
+  if (idx === -1) return null;
+  if (!visibleIndices.has(idx)) {
+    // Swap with a random currently visible one (not recently added)
+    const candidates = [...visibleIndices].filter(i => i >= allQuestions.length - 6 ? false : true);
+    if (candidates.length > 0) {
+      const removeIdx = candidates[Math.floor(Math.random() * candidates.length)];
+      visibleIndices.delete(removeIdx);
+    }
+    visibleIndices.add(idx);
+  }
+  return idx;
+}
+
+
+// ============================================================
+// MAIN THREE.JS SCENE
+// ============================================================
+const canvas = document.getElementById('canvas');
+const renderer = new THREE.WebGLRenderer({
+  canvas,
+  antialias: true,
+  alpha: true
+});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setClearColor(0xffffff, 1);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
+
+const camera = new THREE.PerspectiveCamera(
+  45,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  100
+);
+camera.position.set(0, 0, 6.2);
+
+const DEFAULT_CAM_POS = camera.position.clone();
+const DEFAULT_CAM_TARGET = new THREE.Vector3(0, 0, 0);
+
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true;
+controls.dampingFactor = 0.06;
+controls.enablePan = false;
+controls.rotateSpeed = 0.45;
+controls.zoomSpeed = 0.7;
+controls.minDistance = 3.2;
+controls.maxDistance = 18;
+// Full 360° rotation — no polar lock
+controls.minPolarAngle = 0;
+controls.maxPolarAngle = Math.PI;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.3;
+
+// ---------- Sphere group ----------
+const sphereGroup = new THREE.Group();
+scene.add(sphereGroup);
+
+const SPHERE_RADIUS = 2;
+
+// Track materials for theme switching
+const themeMaterials = [];
+
+function lineMat(color = 0x0a0a0a, opacity = 1) {
+  const mat = new THREE.LineBasicMaterial({
+    color, transparent: true, opacity
+  });
+  themeMaterials.push({ mat, type: 'line', baseOpacity: opacity });
+  return mat;
+}
+
+function pointMat(color = 0x0a0a0a, opacity = 1) {
+  const mat = new THREE.MeshBasicMaterial({
+    color, transparent: true, opacity
+  });
+  themeMaterials.push({ mat, type: 'point', baseOpacity: opacity });
+  return mat;
+}
+
+// 1. Icosahedron wireframe
+const icoGeo = new THREE.IcosahedronGeometry(SPHERE_RADIUS, 2);
+const icoEdges = new THREE.EdgesGeometry(icoGeo);
+const icoLines = new THREE.LineSegments(icoEdges, lineMat(0x0a0a0a, 0.08));
+sphereGroup.add(icoLines);
+
+// 2. Great circles
+function makeGreatCircle(radius, segments = 180, opacity = 0.55) {
+  const pts = [];
+  for (let i = 0; i <= segments; i++) {
+    const t = (i / segments) * Math.PI * 2;
+    pts.push(new THREE.Vector3(Math.cos(t) * radius, Math.sin(t) * radius, 0));
+  }
+  const geo = new THREE.BufferGeometry().setFromPoints(pts);
+  return new THREE.LineLoop(geo, lineMat(0x0a0a0a, opacity));
+}
+
+sphereGroup.add(makeGreatCircle(SPHERE_RADIUS, 220, 0.55));
+const m1 = makeGreatCircle(SPHERE_RADIUS, 220, 0.3);
+m1.rotation.y = Math.PI / 2;
+sphereGroup.add(m1);
+const m2 = makeGreatCircle(SPHERE_RADIUS, 220, 0.22);
+m2.rotation.z = Math.PI / 3; m2.rotation.x = Math.PI / 5;
+sphereGroup.add(m2);
+const m3 = makeGreatCircle(SPHERE_RADIUS, 220, 0.18);
+m3.rotation.z = -Math.PI / 4; m3.rotation.y = Math.PI / 3;
+sphereGroup.add(m3);
+
+// 3. Parallels
+function makeParallel(radius, y, opacity = 0.2) {
+  const r = Math.sqrt(Math.max(0, radius * radius - y * y));
+  if (r < 0.01) return null;
+  const pts = [];
+  const segs = 140;
+  for (let i = 0; i <= segs; i++) {
+    const t = (i / segs) * Math.PI * 2;
+    pts.push(new THREE.Vector3(Math.cos(t) * r, y, Math.sin(t) * r));
+  }
+  const geo = new THREE.BufferGeometry().setFromPoints(pts);
+  return new THREE.LineLoop(geo, lineMat(0x0a0a0a, opacity));
+}
+[-1.3, -0.7, 0, 0.7, 1.3].forEach((y, i) => {
+  const op = [0.14, 0.2, 0.28, 0.2, 0.14][i];
+  const p = makeParallel(SPHERE_RADIUS, y, op);
+  if (p) sphereGroup.add(p);
+});
+
+// 4. Dotted spiral
+function makeDottedSpiral() {
+  const group = new THREE.Group();
+  const dotGeo = new THREE.SphereGeometry(0.008, 6, 6);
+  const mat = pointMat(0x0a0a0a, 0.35);
+  const steps = 240;
+  const turns = 3.5;
+  for (let i = 0; i < steps; i++) {
+    const t = i / steps;
+    const theta = t * Math.PI * 2 * turns;
+    const phi = t * Math.PI;
+    const r = SPHERE_RADIUS;
+    const x = r * Math.sin(phi) * Math.cos(theta);
+    const y = r * Math.cos(phi);
+    const z = r * Math.sin(phi) * Math.sin(theta);
+    const dot = new THREE.Mesh(dotGeo, mat);
+    dot.position.set(x, y, z);
+    group.add(dot);
+  }
+  return group;
+}
+sphereGroup.add(makeDottedSpiral());
+
+// 5. Ambient dots
+function makeAmbientDots(count = 70) {
+  const group = new THREE.Group();
+  const dotGeo = new THREE.SphereGeometry(0.006, 5, 5);
+  const mat = pointMat(0x0a0a0a, 0.25);
+  for (let i = 0; i < count; i++) {
+    const u = Math.random();
+    const v = Math.random();
+    const theta = 2 * Math.PI * u;
+    const phi = Math.acos(2 * v - 1);
+    const x = SPHERE_RADIUS * Math.sin(phi) * Math.cos(theta);
+    const y = SPHERE_RADIUS * Math.cos(phi);
+    const z = SPHERE_RADIUS * Math.sin(phi) * Math.sin(theta);
+    const dot = new THREE.Mesh(dotGeo, mat);
+    dot.position.set(x, y, z);
+    group.add(dot);
+  }
+  return group;
+}
+sphereGroup.add(makeAmbientDots(70));
+
+// ---------- Question points (pool-based) ----------
+// Pre-create a pool of point meshes; assign questions to them
+const pointPool = []; // { group, halo, core, questionId, assignedIndex }
+const POOL_SIZE = VISIBLE_POOL_SIZE + 4;
+
+function createPoolPoint() {
+  const haloGeo = new THREE.SphereGeometry(0.055, 16, 16);
+  const haloMat = pointMat(0x0a0a0a, 0.08);
+  const halo = new THREE.Mesh(haloGeo, haloMat);
+
+  const coreGeo = new THREE.SphereGeometry(0.022, 16, 16);
+  const coreMat = pointMat(0x0a0a0a, 0.95);
+  const core = new THREE.Mesh(coreGeo, coreMat);
+
+  const group = new THREE.Group();
+  group.add(halo);
+  group.add(core);
+  group.visible = false;
+  sphereGroup.add(group);
+
+  return {
+    group, halo, core,
+    questionId: null,
+    assignedIndex: -1,
+    pulsePhase: Math.random() * Math.PI * 2,
+    targetScale: 1,
+    currentScale: 0
+  };
+}
+
+for (let i = 0; i < POOL_SIZE; i++) {
+  pointPool.push(createPoolPoint());
+}
+
+// Map questionId -> pool slot
+const questionToPool = new Map();
+
+function syncVisiblePoints() {
+  // Clear existing assignments
+  for (const slot of pointPool) {
+    slot.group.visible = false;
+    slot.questionId = null;
+    slot.assignedIndex = -1;
+  }
+  questionToPool.clear();
+
+  // Assign visible questions to pool slots
+  const indices = [...visibleIndices];
+  for (let i = 0; i < indices.length && i < pointPool.length; i++) {
+    const qIdx = indices[i];
+    const q = allQuestions[qIdx];
+    if (!q) continue;
+    const slot = pointPool[i];
+    slot.group.visible = true;
+    slot.group.position.copy(q.position).multiplyScalar(SPHERE_RADIUS);
+    slot.group.lookAt(0, 0, 0);
+    slot.questionId = q.id;
+    slot.assignedIndex = qIdx;
+    slot.targetScale = 1;
+    slot.currentScale = 1;
+    slot.group.scale.setScalar(1);
+    questionToPool.set(q.id, slot);
+  }
+}
+
+// ============================================================
+// RAYCASTING
+// ============================================================
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+let hoveredQuestionId = null;
+
+function updateMouse(event) {
+  const x = event.clientX ?? (event.touches && event.touches[0] && event.touches[0].clientX);
+  const y = event.clientY ?? (event.touches && event.touches[0] && event.touches[0].clientY);
+  if (x == null) return;
+  mouse.x = (x / window.innerWidth) * 2 - 1;
+  mouse.y = -(y / window.innerHeight) * 2 + 1;
+}
+
+function getHoveredQuestion() {
+  raycaster.setFromCamera(mouse, camera);
+  const targets = [];
+  for (const slot of pointPool) {
+    if (slot.group.visible) {
+      targets.push(slot.core);
+      targets.push(slot.halo);
+    }
+  }
+  const intersects = raycaster.intersectObjects(targets, false);
+  if (intersects.length > 0) {
+    const hit = intersects[0].object;
+    const slot = pointPool.find(s => s.core === hit || s.halo === hit);
+    if (slot && slot.questionId !== null) {
+      return { slot, question: allQuestions[slot.assignedIndex] };
+    }
+  }
+  return null;
+}
+
+canvas.addEventListener('mousemove', (e) => {
+  updateMouse(e);
+  const hit = getHoveredQuestion();
+  const newId = hit ? hit.question.id : null;
+  if (newId !== hoveredQuestionId) {
+    hoveredQuestionId = newId;
+    canvas.classList.toggle('point-hover', !!hit);
+  }
+});
+
+let pointerDownPos = null;
+let pointerDownTime = 0;
+
+canvas.addEventListener('pointerdown', (e) => {
+  pointerDownPos = { x: e.clientX, y: e.clientY };
+  pointerDownTime = performance.now();
+});
+
+canvas.addEventListener('pointerup', (e) => {
+  if (!pointerDownPos) return;
+  const dx = e.clientX - pointerDownPos.x;
+  const dy = e.clientY - pointerDownPos.y;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+  const dt = performance.now() - pointerDownTime;
+  pointerDownPos = null;
+
+  if (dist < 6 && dt < 400) {
+    updateMouse(e);
+    const hit = getHoveredQuestion();
+    if (hit) openQuestion(hit.question);
+  }
+});
+
+// ============================================================
+// CAMERA ANIMATION
+// ============================================================
+let cameraAnim = null;
+
+function animateCamera(targetPos, targetLookAt, duration = 1400, onComplete) {
+  const startPos = camera.position.clone();
+  const startTarget = controls.target.clone();
+  const startTime = performance.now();
+  controls.autoRotate = false;
+
+  cameraAnim = {
+    startPos,
+    targetPos: targetPos.clone(),
+    startTarget,
+    targetLookAt: targetLookAt.clone(),
+    startTime,
+    duration,
+    onComplete
+  };
+}
+
+function easeInOutCubic(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+function updateCameraAnim() {
+  if (!cameraAnim) return;
+  const t = Math.min(1, (performance.now() - cameraAnim.startTime) / cameraAnim.duration);
+  const e = easeInOutCubic(t);
+
+  camera.position.lerpVectors(cameraAnim.startPos, cameraAnim.targetPos, e);
+  controls.target.lerpVectors(cameraAnim.startTarget, cameraAnim.targetLookAt, e);
+
+  if (t >= 1) {
+    const cb = cameraAnim.onComplete;
+    cameraAnim = null;
+    if (cb) cb();
+  }
+}
+
+// ============================================================
+// QUESTION PANEL
+// ============================================================
+const panel = document.getElementById('panel');
+const panelQuestion = document.getElementById('panel-question');
+const panelReplies = document.getElementById('panel-replies');
+const panelReply = document.getElementById('panel-reply');
+const panelSubmit = document.getElementById('panel-submit');
+const panelClose = document.getElementById('panel-close');
+const panelReport = document.getElementById('panel-report');
+
+let activeQuestion = null;
+let savedCameraState = null;
+
+function flyToQuestion(q, onArrive) {
+  // Ensure it's visible in the pool
+  ensureVisible(q.id);
+  syncVisiblePoints();
+
+  const dir = q.position.clone().normalize();
+  const targetCamPos = dir.clone().multiplyScalar(SPHERE_RADIUS + 1.4);
+  targetCamPos.y += 0.15;
+
+  animateCamera(targetCamPos, new THREE.Vector3(0, 0, 0), 1400, onArrive);
+}
+
+function renderReplies(replies) {
+  panelReplies.innerHTML = '';
+  if (!replies || replies.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'panel-replies-empty';
+    empty.textContent = 'no replies yet — be the first to answer.';
+    panelReplies.appendChild(empty);
+    return;
+  }
+  for (const r of replies) {
+    const el = document.createElement('div');
+    el.className = 'panel-reply-item' + (r.parent_reply_id ? ' nested' : '');
+    el.textContent = r.text;
+    panelReplies.appendChild(el);
+  }
+}
+
+async function openQuestion(q) {
+  activeQuestion = q;
+  panelQuestion.textContent = `«${q.text}»`;
+  panelReply.value = '';
+  panelReplies.innerHTML = '';
+
+  // Confirm with backend (source of truth); keep local text if request fails
+  try {
+    const res = await apiRequest(`/api/questions/${encodeURIComponent(q.id)}`);
+    const payload = apiData(res) || {};
+    const fresh = payload.question || null;
+    if (fresh && fresh.text && activeQuestion && activeQuestion.id === q.id) {
+      panelQuestion.textContent = `«${fresh.text}»`;
+      if (fresh.x != null) {
+        q.position = new THREE.Vector3(fresh.x, fresh.y, fresh.z);
+      }
+    }
+  } catch (err) {
+    console.warn('open question refresh failed', err);
+  }
+
+  savedCameraState = {
+    position: camera.position.clone(),
+    target: controls.target.clone()
+  };
+
+  flyToQuestion(q, () => {
+    panel.classList.add('open');
+    setTimeout(() => panelReply.focus(), 100);
+  });
+
+  // Highlight
+  const slot = questionToPool.get(q.id);
+  if (slot) {
+    slot.core.material.opacity = 1;
+    slot.halo.material.opacity = 0.28;
+  }
+
+  const replies = await fetchReplies(q.id);
+  // The person may have already navigated away by the time this resolves.
+  if (activeQuestion && activeQuestion.id === q.id) renderReplies(replies);
+}
+
+function closePanel() {
+  panel.classList.remove('open');
+  if (activeQuestion) {
+    const slot = questionToPool.get(activeQuestion.id);
+    if (slot) {
+      slot.core.material.opacity = 0.95;
+      slot.halo.material.opacity = 0.08;
+    }
+  }
+  if (savedCameraState) {
+    animateCamera(savedCameraState.position, savedCameraState.target, 1200, () => {
+      controls.autoRotate = true;
+      activeQuestion = null;
+      savedCameraState = null;
+    });
+  } else {
+    controls.autoRotate = true;
+    activeQuestion = null;
+    savedCameraState = null;
+  }
+}
+
+panelClose.addEventListener('click', closePanel);
+
+panelSubmit.addEventListener('click', async () => {
+  const text = panelReply.value.trim();
+  if (!text || !activeQuestion) return;
+  const question = activeQuestion;
+
+  panelSubmit.style.opacity = '0.4';
+  try {
+    const res = await apiRequest(`/api/questions/${encodeURIComponent(question.id)}/replies`, {
+      method: 'POST',
+      body: JSON.stringify({ text })
+    });
+    const reply = (apiData(res) || {}).reply;
+    panelReply.value = '';
+    if (activeQuestion && activeQuestion.id === question.id) {
+      const replies = await fetchReplies(question.id);
+      renderReplies(replies);
+    }
+    showToast("your thought has been left, quietly.");
+  } catch (err) {
+    showToast(err.message || "your reply could not be sent. please try again.");
+  } finally {
+    panelSubmit.style.opacity = '';
+  }
+});
+
+panelReply.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) panelSubmit.click();
+});
+
+panelReport.addEventListener('click', async () => {
+  if (!activeQuestion) return;
+  const reason = window.prompt('What is wrong with this question? (a short reason)');
+  if (!reason || !reason.trim()) return;
+  try {
+    await apiRequest('/api/reports', {
+      method: 'POST',
+      body: JSON.stringify({
+        question_id: activeQuestion.id,
+        reason: reason.trim()
+      })
+    });
+    showToast("thank you — this has been reported.");
+  } catch (err) {
+    showToast(err.message || "could not submit your report. please try again.");
+  }
+});
+
+// ============================================================
+// LEAVE SOMETHING
+// ============================================================
+const leaveModal = document.getElementById('leave');
+const leaveInput = document.getElementById('leave-input');
+const leaveCancel = document.getElementById('leave-cancel');
+const leaveSubmit = document.getElementById('leave-submit');
+const btnLeave = document.getElementById('btn-leave');
+
+btnLeave.addEventListener('click', () => {
+  leaveModal.classList.add('open');
+  setTimeout(() => leaveInput.focus(), 100);
+});
+
+leaveCancel.addEventListener('click', () => {
+  leaveModal.classList.remove('open');
+  leaveInput.value = '';
+});
+
+leaveSubmit.addEventListener('click', submitLeave);
+leaveInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') submitLeave();
+});
+
+async function submitLeave() {
+  const text = leaveInput.value.trim();
+  if (!text) return;
+
+  leaveSubmit.style.opacity = '0.4';
+  let row;
+  try {
+    const body = { text };
+    if (currentTopicSlug) {
+      // Backend accepts topic_id; we send topic slug via questions? filter only.
+      // Creation uses text; optional topic_id if we resolve it later.
+      body.topic_slug = currentTopicSlug;
+    }
+    const result = await apiRequest('/api/questions', {
+      method: 'POST',
+      body: JSON.stringify(body)
+    });
+    row = (apiData(result) || {}).question || result.question;
+    if (!row || !row.id) throw new Error('question was not saved');
+  } catch (err) {
+    leaveSubmit.style.opacity = '';
+    showToast(err.message || "that could not be saved. please try again.");
+    return;
+  }
+  leaveSubmit.style.opacity = '';
+
+  // Recompute visibility and ensure the new one is visible
+  const idx = upsertWorkingSet(row);
+  const q = allQuestions[idx];
+  computeVisibleIndices();
+  ensureVisible(q.id);
+  syncVisiblePoints();
+
+  // Animate appearance
+  const slot = questionToPool.get(q.id);
+  if (slot) {
+    slot.currentScale = 0.01;
+    slot.group.scale.setScalar(0.01);
+    const start = performance.now();
+    function grow() {
+      const t = Math.min(1, (performance.now() - start) / 900);
+      const e = 1 - Math.pow(1 - t, 3);
+      slot.currentScale = e;
+      slot.group.scale.setScalar(e);
+      if (t < 1) requestAnimationFrame(grow);
+    }
+    grow();
+  }
+
+  leaveModal.classList.remove('open');
+  leaveInput.value = '';
+
+  showToast("something new, somewhere in the sphere.");
+}
+
+// ============================================================
+// RANDOM DISCOVERY — "Take Me Somewhere"
+// The backend chooses the question; the browser never picks only from
+// what it has already downloaded.
+// ============================================================
+const btnRandom = document.getElementById('btn-random');
+btnRandom.addEventListener('click', async () => {
+  btnRandom.style.opacity = '0.5';
+  const row = await fetchRandomQuestion();
+  btnRandom.style.opacity = '';
+
+  if (!row) {
+    showToast("nothing to discover right now — try leaving a question.");
+    return;
+  }
+
+  rememberRecent(row.id);
+  const idx = upsertWorkingSet(row);
+  const q = allQuestions[idx];
+  openQuestion(q);
+});
+
+// ============================================================
+// TOAST
+// ============================================================
+const toast = document.getElementById('toast');
+let toastTimer = null;
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+}
+
+// ============================================================
+// RESIZE
+// ============================================================
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// ============================================================
+// ANIMATE
+// ============================================================
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+
+  // Subtle breathing
+  const breath = 1 + Math.sin(t * 0.4) * 0.004;
+  sphereGroup.scale.setScalar(breath);
+
+  // Pulse visible points
+  for (const slot of pointPool) {
+    if (!slot.group.visible) continue;
+    const qId = slot.questionId;
+    const isActive = activeQuestion && activeQuestion.id === qId;
+    const isHovered = hoveredQuestionId === qId;
+
+    const pulse = 1 + Math.sin(t * 1.2 + slot.pulsePhase) * 0.08;
+
+    if (isActive) {
+      slot.halo.scale.setScalar(1);
+    } else if (isHovered) {
+      slot.core.scale.setScalar(1.6);
+      slot.halo.material.opacity = 0.24;
+      slot.halo.scale.setScalar(1);
+    } else {
+      slot.core.scale.setScalar(1);
+      slot.halo.material.opacity = 0.08;
+      slot.halo.scale.setScalar(pulse);
+    }
+  }
+
+  // Theme transition lerp
+  updateThemeTransition();
+
+  updateCameraAnim();
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+// ============================================================
+// INTRO
+// ============================================================
+setTimeout(() => document.getElementById('tagline').classList.add('visible'), 400);
+setTimeout(() => document.getElementById('hint').classList.add('visible'), 1400);
+setTimeout(() => document.getElementById('hint').classList.add('hidden'), 7500);
+canvas.addEventListener('pointerdown', () => {
+  document.getElementById('hint').classList.add('hidden');
+}, { once: true });
+
+// ============================================================
+// LIQUID THEME TRANSITION
+// ============================================================
+const THEME_KEY = 'qs-theme';
+const themeWipe = document.getElementById('theme-wipe');
+
+const THEME_COLORS = {
+  light: { bg: 0xffffff, fg: 0x0a0a0a, sphere: 0x0a0a0a },
+  dark:  { bg: 0x050505, fg: 0xf0f0f0, sphere: 0xf0f0f0 }
+};
+
+let currentTheme = 'light';
+let themeTransition = {
+  active: false,
+  fromBg: new THREE.Color(0xffffff),
+  toBg: new THREE.Color(0xffffff),
+  fromSphere: new THREE.Color(0x0a0a0a),
+  toSphere: new THREE.Color(0x0a0a0a),
+  startTime: 0,
+  duration: 1200
+};
+
+function updateThemeTransition() {
+  if (!themeTransition.active) return;
+  const t = Math.min(1, (performance.now() - themeTransition.startTime) / themeTransition.duration);
+  const e = easeInOutCubic(t);
+
+  const bg = themeTransition.fromBg.clone().lerp(themeTransition.toBg, e);
+  const sphere = themeTransition.fromSphere.clone().lerp(themeTransition.toSphere, e);
+
+  scene.background.copy(bg);
+  renderer.setClearColor(bg, 1);
+
+  for (const entry of themeMaterials) {
+    entry.mat.color.copy(sphere);
+  }
+
+  if (t >= 1) {
+    themeTransition.active = false;
+  }
+}
+
+function applyTheme(theme, originX = window.innerWidth / 2, originY = window.innerHeight / 2, animate = true) {
+  if (theme === currentTheme && animate) return;
+
+  const fromColors = THEME_COLORS[currentTheme];
+  const toColors = THEME_COLORS[theme];
+
+  // Update data attribute immediately for CSS transitions
+  document.body.setAttribute('data-theme', theme);
+
+  // Update theme buttons
+  document.querySelectorAll('.sp-theme-option').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.themeValue === theme);
+  });
+
+  if (animate) {
+    // Liquid wipe overlay
+    const maxDim = Math.max(window.innerWidth, window.innerHeight) * 2.4;
+    const wipeColor = theme === 'dark' ? '#050505' : '#ffffff';
+    themeWipe.style.left = originX + 'px';
+    themeWipe.style.top = originY + 'px';
+    themeWipe.style.width = maxDim + 'px';
+    themeWipe.style.height = maxDim + 'px';
+    themeWipe.style.background = `radial-gradient(circle at center, ${wipeColor} 0%, ${wipeColor} 55%, transparent 75%)`;
+    themeWipe.style.transform = 'translate(-50%, -50%) scale(0)';
+    themeWipe.style.opacity = '0';
+
+    // Force reflow
+    void themeWipe.offsetWidth;
+
+    // Animate wipe
+    themeWipe.style.transition = 'transform 1.1s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.1s cubic-bezier(0.4, 0, 0.2, 1)';
+    themeWipe.style.transform = 'translate(-50%, -50%) scale(1)';
+    themeWipe.style.opacity = '0.85';
+
+    setTimeout(() => {
+      themeWipe.style.opacity = '0';
+    }, 650);
+
+    // Start Three.js color lerp
+    themeTransition.fromBg.copy(scene.background);
+    themeTransition.toBg.setHex(toColors.bg);
+    themeTransition.fromSphere.setHex(fromColors.sphere);
+    themeTransition.toSphere.setHex(toColors.sphere);
+    themeTransition.startTime = performance.now();
+    themeTransition.active = true;
+  } else {
+    // Instant
+    scene.background.setHex(toColors.bg);
+    renderer.setClearColor(toColors.bg, 1);
+    for (const entry of themeMaterials) {
+      entry.mat.color.setHex(toColors.sphere);
+    }
+  }
+
+  currentTheme = theme;
+  try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
+}
+
+// Init theme
+(function initTheme() {
+  let saved = 'light';
+  try { saved = localStorage.getItem(THEME_KEY) || 'light'; } catch (e) {}
+  if (saved !== 'light' && saved !== 'dark') saved = 'light';
+  currentTheme = saved;
+  document.body.setAttribute('data-theme', saved);
+  document.querySelectorAll('.sp-theme-option').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.themeValue === saved);
+  });
+  const c = THEME_COLORS[saved];
+  scene.background.setHex(c.bg);
+  renderer.setClearColor(c.bg, 1);
+  for (const entry of themeMaterials) {
+    entry.mat.color.setHex(c.sphere);
+  }
+})();
+
+document.querySelectorAll('.sp-theme-option').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const rect = btn.getBoundingClientRect();
+    const ox = rect.left + rect.width / 2;
+    const oy = rect.top + rect.height / 2;
+    applyTheme(btn.dataset.themeValue, ox, oy, true);
+  });
+});
+
+// ============================================================
+// SETTINGS PANEL
+// ============================================================
+const settingsBtn = document.getElementById('settings-btn');
+const settingsPanel = document.getElementById('settings-panel');
+
+settingsBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  const isOpen = settingsPanel.classList.toggle('open');
+  settingsBtn.classList.toggle('open', isOpen);
+});
+
+document.addEventListener('click', (e) => {
+  if (!settingsPanel.contains(e.target) && !settingsBtn.contains(e.target)) {
+    settingsPanel.classList.remove('open');
+    settingsBtn.classList.remove('open');
+  }
+});
+
+// ============================================================
+// SEARCH
+// ============================================================
+const spSearchToggle = document.getElementById('sp-search-toggle');
+const searchWrap = document.getElementById('search-wrap');
+const searchInput = document.getElementById('search-input');
+const searchResults = document.getElementById('search-results');
+
+spSearchToggle.addEventListener('click', () => {
+  const isOpen = searchWrap.classList.toggle('open');
+  if (isOpen) {
+    setTimeout(() => searchInput.focus(), 300);
+  } else {
+    searchInput.value = '';
+    searchResults.innerHTML = '';
+  }
+});
+
+let searchDebounce = null;
+searchInput.addEventListener('input', () => {
+  clearTimeout(searchDebounce);
+  searchDebounce = setTimeout(performSearch, 220);
+});
+
+// Search runs against the database (search_active_questions RPC) — it is
+// never limited to the ~48 questions currently on the sphere, and it only
+// ever returns active, non-expired, approved questions.
+let searchToken = 0;
+async function performSearch() {
+  const q = searchInput.value.trim();
+  searchResults.innerHTML = '';
+  if (!q) return;
+
+  const myToken = ++searchToken;
+  const loading = document.createElement('div');
+  loading.className = 'search-empty';
+  loading.textContent = 'searching...';
+  searchResults.appendChild(loading);
+
+  const rows = await fetchSearchResults(q);
+  if (myToken !== searchToken) return; // a newer search superseded this one
+
+  searchResults.innerHTML = '';
+
+  if (rows.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'search-empty';
+    empty.textContent = 'nothing found, for now.';
+    searchResults.appendChild(empty);
+    return;
+  }
+
+  for (const row of rows) {
+    const btn = document.createElement('button');
+    btn.className = 'search-result';
+    btn.textContent = `«${row.text}»`;
+    btn.addEventListener('click', () => {
+      searchWrap.classList.remove('open');
+      searchInput.value = '';
+      searchResults.innerHTML = '';
+      settingsPanel.classList.remove('open');
+      settingsBtn.classList.remove('open');
+      const idx = upsertWorkingSet(row);
+      openQuestion(allQuestions[idx]);
+    });
+    searchResults.appendChild(btn);
+  }
+}
+
+// ============================================================
+// TOPICS
+// Elegant/minimal topic pills, backend-driven discovery per topic.
+// Selecting a topic filters random discovery, search, and reloads the
+// initial visible pool for that topic — it never becomes a scrolling feed.
+// ============================================================
+const topicRow = document.getElementById('topic-row');
+
+async function initTopics() {
+  const topics = await fetchTopics();
+  topicRow.innerHTML = '';
+
+  const allPill = document.createElement('button');
+  allPill.className = 'topic-pill active';
+  allPill.textContent = 'All';
+  allPill.addEventListener('click', () => selectTopic(null, allPill));
+  topicRow.appendChild(allPill);
+
+  for (const topic of topics) {
+    const pill = document.createElement('button');
+    pill.className = 'topic-pill';
+    pill.textContent = topic.name;
+    pill.addEventListener('click', () => selectTopic(topic.slug, pill));
+    topicRow.appendChild(pill);
+  }
+}
+
+async function selectTopic(slug, pillEl) {
+  if (slug === currentTopicSlug) return;
+  currentTopicSlug = slug;
+  topicRow.querySelectorAll('.topic-pill').forEach(p => p.classList.remove('active'));
+  pillEl.classList.add('active');
+
+  await fetchInitialBatch();
+  computeVisibleIndices();
+  syncVisiblePoints();
+  showToast(slug ? `exploring: ${pillEl.textContent.toLowerCase()}` : 'exploring: everything');
+}
+
+// ============================================================
+// HOME
+// ============================================================
+const spHome = document.getElementById('sp-home');
+spHome.addEventListener('click', () => {
+  settingsPanel.classList.remove('open');
+  settingsBtn.classList.remove('open');
+  searchWrap.classList.remove('open');
+  searchInput.value = '';
+  searchResults.innerHTML = '';
+  panel.classList.remove('open');
+  leaveModal.classList.remove('open');
+  document.getElementById('contact').classList.remove('open');
+  if (typeof closeSitePage === 'function') closeSitePage();
+
+  if (activeQuestion) {
+    const slot = questionToPool.get(activeQuestion.id);
+    if (slot) {
+      slot.core.material.opacity = 0.95;
+      slot.halo.material.opacity = 0.08;
+    }
+    activeQuestion = null;
+    savedCameraState = null;
+  }
+
+  animateCamera(DEFAULT_CAM_POS, DEFAULT_CAM_TARGET, 1400, () => {
+    controls.autoRotate = true;
+  });
+});
+
+// ============================================================
+// CONTACT — with its own mini sphere
+// ============================================================
+const spContact = document.getElementById('sp-contact');
+const contactModal = document.getElementById('contact');
+const contactCanvas = document.getElementById('contact-canvas');
+const contactInput = document.getElementById('contact-input');
+const contactCancel = document.getElementById('contact-cancel');
+const contactSubmit = document.getElementById('contact-submit');
+
+// Mini sphere scene (lazy init)
+let miniScene = null;
+let miniCamera = null;
+let miniRenderer = null;
+let miniControls = null;
+let miniSphereGroup = null;
+let miniThemeMaterials = [];
+let miniAnimating = false;
+
+function initMiniSphere() {
+  if (miniRenderer) return;
+
+  miniScene = new THREE.Scene();
+  const isDark = currentTheme === 'dark';
+  const bgColor = isDark ? 0x050505 : 0xffffff;
+  const sphereColor = isDark ? 0xf0f0f0 : 0x0a0a0a;
+  miniScene.background = new THREE.Color(bgColor);
+
+  miniCamera = new THREE.PerspectiveCamera(
+    40,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    50
+  );
+  miniCamera.position.set(0, 0, 4.2);
+
+  miniRenderer = new THREE.WebGLRenderer({
+    canvas: contactCanvas,
+    antialias: true,
+    alpha: false
+  });
+  miniRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  miniRenderer.setSize(window.innerWidth, window.innerHeight);
+  miniRenderer.setClearColor(bgColor, 1);
+
+  miniSphereGroup = new THREE.Group();
+  miniScene.add(miniSphereGroup);
+
+  const R = 1.3;
+
+  function mLineMat(color, opacity) {
+    const mat = new THREE.LineBasicMaterial({ color, transparent: true, opacity });
+    miniThemeMaterials.push({ mat, type: 'line', baseOpacity: opacity });
+    return mat;
+  }
+  function mPointMat(color, opacity) {
+    const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity });
+    miniThemeMaterials.push({ mat, type: 'point', baseOpacity: opacity });
+    return mat;
+  }
+
+  // Icosahedron wireframe
+  const icoGeo = new THREE.IcosahedronGeometry(R, 1);
+  const icoEdges = new THREE.EdgesGeometry(icoGeo);
+  miniSphereGroup.add(new THREE.LineSegments(icoEdges, mLineMat(sphereColor, 0.12)));
+
+  // Equator
+  const pts = [];
+  for (let i = 0; i <= 120; i++) {
+    const t = (i / 120) * Math.PI * 2;
+    pts.push(new THREE.Vector3(Math.cos(t) * R, Math.sin(t) * R, 0));
+  }
+  miniSphereGroup.add(new THREE.LineLoop(
+    new THREE.BufferGeometry().setFromPoints(pts),
+    mLineMat(sphereColor, 0.5)
+  ));
+
+  // Meridian
+  const m = new THREE.LineLoop(
+    new THREE.BufferGeometry().setFromPoints(pts),
+    mLineMat(sphereColor, 0.28)
+  );
+  m.rotation.y = Math.PI / 2;
+  miniSphereGroup.add(m);
+
+  // A few scattered dots
+  const dotGeo = new THREE.SphereGeometry(0.014, 6, 6);
+  const dotMat = mPointMat(sphereColor, 0.7);
+  for (let i = 0; i < 14; i++) {
+    const u = Math.random();
+    const v = Math.random();
+    const theta = 2 * Math.PI * u;
+    const phi = Math.acos(2 * v - 1);
+    const dot = new THREE.Mesh(dotGeo, dotMat);
+    dot.position.set(
+      R * Math.sin(phi) * Math.cos(theta),
+      R * Math.cos(phi),
+      R * Math.sin(phi) * Math.sin(theta)
+    );
+    miniSphereGroup.add(dot);
+  }
+}
+
+function startMiniAnimation() {
+  if (miniAnimating) return;
+  miniAnimating = true;
+  const miniClock = new THREE.Clock();
+  function loop() {
+    if (!miniAnimating) return;
+    requestAnimationFrame(loop);
+    const t = miniClock.getElapsedTime();
+    miniSphereGroup.rotation.y = t * 0.15;
+    miniSphereGroup.rotation.x = Math.sin(t * 0.2) * 0.1;
+    const breath = 1 + Math.sin(t * 0.5) * 0.006;
+    miniSphereGroup.scale.setScalar(breath);
+    miniRenderer.render(miniScene, miniCamera);
+  }
+  loop();
+}
+
+function stopMiniAnimation() {
+  miniAnimating = false;
+}
+
+function updateMiniTheme() {
+  if (!miniRenderer) return;
+  const isDark = currentTheme === 'dark';
+  const bgColor = isDark ? 0x050505 : 0xffffff;
+  const sphereColor = isDark ? 0xf0f0f0 : 0x0a0a0a;
+  miniScene.background.setHex(bgColor);
+  miniRenderer.setClearColor(bgColor, 1);
+  for (const entry of miniThemeMaterials) {
+    entry.mat.color.setHex(sphereColor);
+  }
+}
+
+spContact.addEventListener('click', () => {
+  settingsPanel.classList.remove('open');
+  settingsBtn.classList.remove('open');
+  initMiniSphere();
+  updateMiniTheme();
+  contactModal.classList.add('open');
+  startMiniAnimation();
+  setTimeout(() => contactInput.focus(), 300);
+});
+
+contactCancel.addEventListener('click', () => {
+  contactModal.classList.remove('open');
+  contactInput.value = '';
+  stopMiniAnimation();
+});
+
+contactSubmit.addEventListener('click', submitContact);
+contactInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') submitContact();
+});
+
+async function submitContact() {
+  const message = contactInput.value.trim();
+  if (!message) return;
+
+  contactSubmit.style.opacity = '0.3';
+  contactSubmit.textContent = 'sending...';
+
+  try {
+    await apiRequest('/api/contact', {
+      method: 'POST',
+      body: JSON.stringify({ message })
+    });
+
+    contactModal.classList.remove('open');
+    contactInput.value = '';
+    stopMiniAnimation();
+    showToast("your message has been left.");
+  } catch (err) {
+    showToast(err.message || "your message could not be sent. please try again.");
+  } finally {
+    contactSubmit.style.opacity = '';
+    contactSubmit.textContent = 'send';
+  }
+}
+
+// Resize mini renderer
+window.addEventListener('resize', () => {
+  if (miniRenderer) {
+    miniCamera.aspect = window.innerWidth / window.innerHeight;
+    miniCamera.updateProjectionMatrix();
+    miniRenderer.setSize(window.innerWidth, window.innerHeight);
+  }
+});
+
+// ============================================================
+// INIT
+// ============================================================
+// Start the sphere animating immediately with an empty pool, then fill it
+// in as soon as the backend responds — the visual experience (camera,
+// controls, theme) never has to wait on the network.
+computeVisibleIndices();
+syncVisiblePoints();
+animate();
+
+initTopics();
+fetchInitialBatch().then(() => {
+  computeVisibleIndices();
+  syncVisiblePoints();
+});
+
+// ============================================================
+// SITE PAGES (frontend navigation — does not replace the sphere)
+// ============================================================
+const pageView = document.getElementById('page-view');
+const pageCloseBtn = document.getElementById('page-close');
+const PAGE_TITLES = {
+  about: 'About Questionable Sphere',
+  faq: 'Questionable Sphere FAQ',
+  guidelines: 'Questionable Sphere Community Guidelines',
+  privacy: 'Questionable Sphere Privacy Policy',
+  terms: 'Questionable Sphere Terms of Use',
+  api: 'Questionable Sphere API'
+};
+const HOME_TITLE = 'Questionable Sphere — A World of Questions';
+
+function openSitePage(name) {
+  if (name === 'home') {
+    closeSitePage();
+    return;
+  }
+  const section = document.getElementById('page-' + name);
+  if (!section) return;
+  document.querySelectorAll('.page-section').forEach((el) => el.classList.remove('active'));
+  section.classList.add('active');
+  pageView.classList.add('open');
+  document.body.classList.add('page-open');
+  pageView.scrollTop = 0;
+  document.title = PAGE_TITLES[name] || HOME_TITLE;
+  settingsPanel.classList.remove('open');
+  settingsBtn.classList.remove('open');
+}
+
+function closeSitePage() {
+  pageView.classList.remove('open');
+  document.body.classList.remove('page-open');
+  document.querySelectorAll('.page-section').forEach((el) => el.classList.remove('active'));
+  document.title = HOME_TITLE;
+}
+
+pageCloseBtn.addEventListener('click', closeSitePage);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && pageView.classList.contains('open')) {
+    closeSitePage();
+  }
+});
+
+document.querySelectorAll('[data-page]').forEach((el) => {
+  el.addEventListener('click', (e) => {
+    e.preventDefault();
+    const name = el.getAttribute('data-page');
+    if (name === 'home') {
+      if (typeof spHome !== 'undefined') spHome.click();
+      else closeSitePage();
+      return;
+    }
+    openSitePage(name);
+  });
+});
+
+document.querySelectorAll('[data-nav="contact"]').forEach((el) => {
+  el.addEventListener('click', (e) => {
+    e.preventDefault();
+    closeSitePage();
+    settingsPanel.classList.remove('open');
+    settingsBtn.classList.remove('open');
+    if (typeof initMiniSphere === 'function') {
+      initMiniSphere();
+      updateMiniTheme();
+    }
+    contactModal.classList.add('open');
+    startMiniAnimation();
+    setTimeout(() => contactInput.focus(), 300);
+  });
+});
+
+</script>
+</body>
+</html>
