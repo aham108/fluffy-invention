@@ -558,6 +558,215 @@
   }
   #panel-report:hover { opacity: 1; color: var(--muted); }
 
+  .countdown, .reply-countdown {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 9px;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--muted-soft);
+    margin-left: 10px;
+    white-space: nowrap;
+    transition: color 0.4s ease;
+  }
+  .countdown.urgent, .reply-countdown.urgent {
+    color: var(--accent);
+  }
+  .countdown.critical, .reply-countdown.critical {
+    color: #c26a5a;
+    animation: countdownPulse 2s ease-in-out infinite;
+  }
+  @keyframes countdownPulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+  }
+
+  .panel-reply-item {
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+    position: relative;
+  }
+  .panel-reply-item:hover {
+    background: var(--border);
+  }
+  .panel-reply-item .reply-arrow {
+    color: var(--muted-softer);
+    font-size: 11px;
+    margin-left: 6px;
+  }
+  .panel-reply-item .reply-child-badge {
+    font-family: 'Inter', sans-serif;
+    font-size: 8px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted-soft);
+    margin-left: 8px;
+  }
+  .panel-thread-back {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 0 12px;
+    display: block;
+  }
+  .panel-thread-back:hover { color: var(--fg); }
+  .panel-thread-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.45;
+    color: var(--fg);
+    opacity: 0.9;
+    margin-bottom: 8px;
+  }
+
+  /* Sphere clock */
+  #sphere-clock {
+    position: fixed;
+    bottom: 28px;
+    left: 24px;
+    z-index: 11;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  #sphere-clock-face {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border-strong);
+    position: relative;
+  }
+  #sphere-clock-face .hand {
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+    transform-origin: bottom center;
+    background: var(--fg);
+    opacity: 0.6;
+    border-radius: 1px;
+  }
+  #sphere-clock-face .hand.hour {
+    width: 1.5px;
+    height: 7px;
+    margin-left: -0.75px;
+  }
+  #sphere-clock-face .hand.minute {
+    width: 1.2px;
+    height: 9px;
+    margin-left: -0.6px;
+  }
+  #sphere-clock-face .hand.second {
+    width: 1px;
+    height: 10px;
+    margin-left: -0.5px;
+    opacity: 0.45;
+  }
+  #sphere-clock-time {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 7px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted-soft);
+  }
+
+  /* Search improvements */
+  .sp-search-input-wrap {
+    position: relative;
+  }
+  #search-clear {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 14px;
+    color: var(--muted-soft);
+    cursor: pointer;
+    padding: 4px 2px;
+    display: none;
+    line-height: 1;
+  }
+  #search-clear.visible { display: block; }
+  #search-clear:hover { color: var(--fg); }
+  #search-spinner {
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 8px;
+    height: 8px;
+    border: 1.5px solid var(--accent);
+    border-top-color: transparent;
+    border-radius: 50%;
+    display: none;
+    animation: spin 0.7s linear infinite;
+  }
+  #search-spinner.visible { display: block; }
+  @keyframes spin {
+    to { transform: translateY(-50%) rotate(360deg); }
+  }
+  #search-count {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted-soft);
+    padding: 6px 4px 2px;
+  }
+  .search-empty-hint {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted-softer);
+    margin-top: 6px;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: radial-gradient(circle at 50% 45%, var(--accent-soft) 0%, transparent 55%);
+    opacity: 0.06;
+  }
+
+  #page-view { scroll-behavior: smooth; }
+
+  #toast {
+    transition: opacity 0.8s ease, color 1.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s ease;
+  }
+  #toast.show {
+    transform: translate(-50%, calc(-50% - 6px));
+  }
+
+  .sp-item {
+    min-height: 44px;
+  }
+
+  @keyframes spItemIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  #settings-panel.open .sp-item {
+    animation: spItemIn 0.35s ease both;
+  }
+
   #panel-replies {
     max-height: 180px;
     overflow-y: auto;
@@ -573,7 +782,11 @@
     opacity: 0.85;
     padding: 8px 0;
     border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+    position: relative;
   }
+  .panel-reply-item:hover { background: var(--border); }
   .panel-reply-item.nested { margin-left: 18px; opacity: 0.7; }
   .panel-replies-empty {
     font-family: 'Inter', sans-serif;
@@ -728,7 +941,7 @@
   }
 
   #leave-actions {
-    margin-top: 28px;
+    margin-top: 32px;
     display: flex;
     justify-content: center;
     gap: 32px;
@@ -1100,7 +1313,7 @@
   body.page-open #tagline { opacity: 0; pointer-events: none; }
 
   @media (max-width: 600px) {
-    #brand { top: 28px; font-size: 10px; }
+    #brand { top: 28px; font-size: 10px; letter-spacing: 0.36em; }
     #tagline { top: 52px; font-size: 11px; }
     #controls { bottom: 40px; gap: 24px; }
     .ctrl-btn { font-size: 10px; }
@@ -1128,6 +1341,15 @@
 <div id="tagline">a world of questions, floating</div>
 
 <canvas id="canvas"></canvas>
+
+<div id="sphere-clock" aria-hidden="true">
+  <div id="sphere-clock-face">
+    <div class="hand hour" id="clock-hand-hour"></div>
+    <div class="hand minute" id="clock-hand-minute"></div>
+    <div class="hand second" id="clock-hand-second"></div>
+  </div>
+  <div id="sphere-clock-time">00:00</div>
+</div>
 
 <div id="hint">scroll to zoom · click a point</div>
 
@@ -1161,7 +1383,12 @@
   <div class="sp-divider"></div>
   <button class="sp-item" id="sp-search-toggle">Search</button>
   <div class="sp-search-wrap" id="search-wrap">
-    <input id="search-input" type="text" placeholder="a word, a feeling..." autocomplete="off" />
+    <div class="sp-search-input-wrap">
+      <input id="search-input" type="text" placeholder="a word, a feeling..." autocomplete="off" />
+      <span id="search-spinner"></span>
+      <button type="button" id="search-clear" aria-label="Clear search">×</button>
+    </div>
+    <div id="search-count"></div>
     <div id="search-results"></div>
   </div>
   <div class="sp-divider"></div>
@@ -1180,7 +1407,7 @@
 <div id="panel">
   <button id="panel-close">×</button>
   <div id="panel-question"></div>
-  <div id="panel-meta">a question, somewhere <button id="panel-report" title="report this question">report</button></div>
+  <div id="panel-meta">a question, somewhere <button id="panel-report" title="report this question">report</button> <span id="panel-countdown" class="countdown"></span></div>
   <div id="panel-divider"></div>
   <div id="panel-replies"></div>
   <div id="panel-reply-label">leave a thought</div>
@@ -1238,7 +1465,7 @@
         <h2>How it feels</h2>
         <p>You can leave a question, sit with someone else’s, send a short reply, or ask to be taken somewhere at random. Search exists for when a word is already in mind. Themes exist so the room can be light or dark.</p>
         <h2>What this version is</h2>
-        <p>This is a live, independent project. Questions you leave are stored on a real server for 30 hours, then automatically deleted. There are no accounts, no emails required, and no analytics. The only thing stored on your device is your theme preference and your chosen sphere skin.</p>
+        <p>This is a live, independent project. Questions you leave are stored on a real server for 17 hours, then automatically deleted. There are no accounts, no emails required, and no analytics. The only thing stored on your device is your theme preference and your chosen sphere skin.</p>
         <p>Questionable Sphere is not trying to replace every kind of conversation. It is trying to make a few questions easier to find, and a few thoughts easier to leave behind.</p>
       </div>
     </section>
@@ -1290,10 +1517,10 @@
       <h1 class="page-title">Privacy Policy</h1>
       <p class="page-lead">A plain-language summary of what this project does and does not do. Last updated: September 23, 2026.</p>
       <div class="page-body">
-        <p>Short version: we collect almost nothing, we know almost nothing about you, and anything you leave is gone in about 30 hours.</p>
+        <p>Short version: we collect almost nothing, we know almost nothing about you, and anything you leave is gone in about 17 hours.</p>
 
         <h2>What we collect</h2>
-        <p>When you leave a question or reply to one, the text is stored on our server so other people can see it while it is alive. After roughly 30 hours, it is deleted automatically. We also store the time it was posted, so we can show the sphere in order and know when to delete it.</p>
+        <p>When you leave a question or reply to one, the text is stored on our server so other people can see it while it is alive. After roughly 17 hours, it is deleted automatically. We also store the time it was posted, so we can show the sphere in order and know when to delete it.</p>
         <p>That is the entire list. There is nothing else.</p>
 
         <h2>What we do not collect</h2>
@@ -1304,16 +1531,21 @@
         <p>Your theme preference (light or dark) and your chosen sphere skin are saved in your own browser. That is all. You can clear them at any time by clearing your browser data. We never see them.</p>
 
         <h2>How long your content lives</h2>
-        <p>Questions and replies are automatically deleted about 30 hours after they are posted. Contact messages you send us are kept only long enough for us to read and reply, then deleted.</p>
+        <p>Questions and replies are automatically deleted about 17 hours after they are posted. Contact messages you send us are kept only long enough for us to read and reply, then deleted.</p>
 
         <h2>Anonymous by design</h2>
-        <p>You cannot be identified from anything we store. When you leave something, there is no record of who left it. When someone replies to you, you have no way to know it was them, and they have no way to know it was you. If you want to find a reply to something you wrote, search for the words you used within 30 hours. After that, it is gone.</p>
+        <p>You cannot be identified from anything we store. When you leave something, there is no record of who left it. When someone replies to you, you have no way to know it was them, and they have no way to know it was you. If you want to find a reply to something you wrote, search for the words you used within 17 hours. After that, it is gone.</p>
 
         <h2>Children</h2>
         <p>This site is not for people under 18. We do not and cannot verify your age, but we ask that you do not use this site if you are under 18. The content is anonymous and we do not moderate it. We cannot guarantee what other people will write.</p>
 
         <h2>Payments</h2>
         <p>There are no payments. This is a free project. We are not asking you for money. Nobody owes us anything.</p>
+
+        <h2>How we do not use your data</h2>
+        <p>We do not intentionally use your data for anything. We do not use it to train anything. We do not sell it. We do not share it with anyone. We do not know who you are and we have no way to find out.</p>
+        <p>The only thing your browser stores is your theme preference and your chosen sphere skin, and only on your own device. Your browser itself may keep a normal record of pages you visit — this is true of every website and is outside our control. We do not read that record. We never see it.</p>
+        <p>Nothing you write here is private to you and nothing is private to us: questions and replies are public, anonymous, and deleted after 17 hours. Do not post anything private. Do not post your name, address, phone number, or anything you would not want a stranger to read.</p>
 
         <h2>Changes</h2>
         <p>If this policy changes, the date below will change with it.</p>
@@ -1333,13 +1565,13 @@
         <p>Short version: be kind, do not post anything private or harmful, and understand that this is a small independent project with no moderation team.</p>
 
         <h2>What this is</h2>
-        <p>Questionable Sphere is a small independent project. It hosts a 3D sphere where anyone can leave anonymous questions and replies. Questions and replies are deleted automatically about 30 hours after they are posted. There are no accounts, no emails, and no payments.</p>
+        <p>Questionable Sphere is a small independent project. It hosts a 3D sphere where anyone can leave anonymous questions and replies. Questions and replies are deleted automatically about 17 hours after they are posted. There are no accounts, no emails, and no payments.</p>
 
         <h2>Who can use it</h2>
         <p>Do not use this site if you are under 18. We cannot verify your age and we do not try to. If you are under 18, please close this page.</p>
 
         <h2>Your content</h2>
-        <p>You own anything you post. By posting, you give us permission to display it on the sphere for about 30 hours and to delete it sooner if we need to. You promise that you have the right to post it and that it does not violate anyone else's rights.</p>
+        <p>You own anything you post. By posting, you give us permission to display it on the sphere for about 17 hours and to delete it sooner if we need to. You promise that you have the right to post it and that it does not violate anyone else's rights.</p>
 
         <h2>What you must not post</h2>
         <p>Do not post any of the following:</p>
@@ -1359,7 +1591,7 @@
         <p>Anything you read on this sphere was written by a stranger. It may be false, harmful, or a scam. Do not follow links you did not expect to see. Do not share personal information with anyone you meet here. Do not act on any advice you see here without thinking carefully first. Nobody on this site has been verified. Nobody is responsible for what they post except the person who posted it.</p>
 
         <h2>Nothing is permanent</h2>
-        <p>Everything on this sphere is deleted after about 30 hours. If you leave something you want to keep, save it yourself. If someone replies to you, you have no way to know who they are. If you want to find a reply, search for the words you used before the 30 hours are up.</p>
+        <p>Everything on this sphere is deleted after about 17 hours. If you leave something you want to keep, save it yourself. If someone replies to you, you have no way to know who they are. If you want to find a reply, search for the words you used before the 17 hours are up.</p>
 
         <h2>Availability</h2>
         <p>This is a small free project. It may go down, be slow, or change without notice. We do not promise any level of service. We do not promise that anything you post will be visible, that anything you see will be accurate, or that the site will be running tomorrow.</p>
@@ -1369,6 +1601,11 @@
 
         <h2>No payments, no subscriptions</h2>
         <p>This project is completely free. We are not asking anyone for money. There is no subscription, no plan, no payment method, and no purchase of any kind. Do not send money to anyone claiming to represent Questionable Sphere.</p>
+
+        <h2>How we do not use your data</h2>
+        <p>We do not intentionally use your data for anything. We do not use it to train anything. We do not sell it. We do not share it with anyone. We do not know who you are and we have no way to find out.</p>
+        <p>The only thing your browser stores is your theme preference and your chosen sphere skin, and only on your own device. Your browser itself may keep a normal record of pages you visit — this is true of every website and is outside our control. We do not read that record. We never see it.</p>
+        <p>Nothing you write here is private to you and nothing is private to us: questions and replies are public, anonymous, and deleted after 17 hours. Do not post anything private. Do not post your name, address, phone number, or anything you would not want a stranger to read.</p>
 
         <h2>Changes</h2>
         <p>These terms may change. Continued use after a change means you accept the new version.</p>
@@ -1439,6 +1676,25 @@ function apiData(res) {
   return res;
 }
 
+/** Backend sometimes returns a bare array in data, sometimes { questions|topics|replies: [...] } */
+function asList(payload, key) {
+  if (payload == null) return [];
+  if (Array.isArray(payload)) return payload;
+  if (key && Array.isArray(payload[key])) return payload[key];
+  if (Array.isArray(payload.questions)) return payload.questions;
+  if (Array.isArray(payload.topics)) return payload.topics;
+  if (Array.isArray(payload.replies)) return payload.replies;
+  return [];
+}
+
+/** Backend random / single-question: data may be the row or { question: row } */
+function asQuestion(payload) {
+  if (payload == null) return null;
+  if (payload.question && typeof payload.question === 'object') return payload.question;
+  if (payload.id && (payload.text != null || payload.x != null)) return payload;
+  return null;
+}
+
 // Soft health check — does not block the UI
 (async function checkBackendHealth() {
   try {
@@ -1473,7 +1729,8 @@ function apiData(res) {
 // ============================================================
 const VISIBLE_POOL_SIZE = 48; // how many dots are visible on the sphere at once
 const WORKING_SET_CAP = 160;  // local cache ceiling — NOT the database size
-const RECENT_RANDOM_SIZE = 8; // avoid repeating recent random picks
+const RECENT_RANDOM_SIZE = 24; // avoid repeating recent random picks
+let freshIds = []; // newest questions, prefer these in random
 
 let allQuestions = [];            // working set: { id, text, position }
 let visibleIndices = new Set();   // indices into allQuestions currently on the sphere
@@ -1481,7 +1738,13 @@ let recentRandomIds = [];         // most-recent last; sent to the backend to sk
 let currentTopicSlug = null;      // active topic filter, or null for "all"
 
 function toClientQuestion(row) {
-  return { id: row.id, text: row.text, position: new THREE.Vector3(row.x, row.y, row.z) };
+  return {
+    id: row.id,
+    text: row.text,
+    position: new THREE.Vector3(row.x, row.y, row.z),
+    expires_at: row.expires_at || null,
+    topic_slug: row.topic_slug || null
+  };
 }
 
 function rememberRecent(id) {
@@ -1515,9 +1778,12 @@ async function fetchInitialBatch() {
     let path = `/api/questions?limit=${VISIBLE_POOL_SIZE}`;
     if (currentTopicSlug) path += `&topic=${encodeURIComponent(currentTopicSlug)}`;
     const res = await apiRequest(path);
-    const payload = apiData(res) || {};
-    const list = payload.questions || payload || [];
-    allQuestions = (Array.isArray(list) ? list : []).map(toClientQuestion);
+    const list = asList(apiData(res), 'questions');
+    allQuestions = list.map(toClientQuestion);
+    if (allQuestions.length === 0 && typeof showToast === 'function') {
+      // Soft note only — backend is fine, the sphere is simply quiet for now
+      console.log('[qs] no active questions yet — leave one to seed the sphere');
+    }
   } catch (err) {
     console.warn('initial batch failed', err);
     allQuestions = [];
@@ -1527,19 +1793,50 @@ async function fetchInitialBatch() {
   }
 }
 
-// "Take Me Somewhere" — the backend selects the question, not the browser.
+// "Take Me Somewhere" — backend first, then local fallback; prefer fresh ids.
 async function fetchRandomQuestion() {
+  // Prefer a fresh (just-left) question if one is still unseen
+  const freshCandidate = freshIds.find(id => !recentRandomIds.includes(id));
+  if (freshCandidate) {
+    const idx = allQuestions.findIndex(q => q.id === freshCandidate);
+    if (idx !== -1) {
+      freshIds = freshIds.filter(id => id !== freshCandidate);
+      return {
+        id: allQuestions[idx].id,
+        text: allQuestions[idx].text,
+        x: allQuestions[idx].position.x,
+        y: allQuestions[idx].position.y,
+        z: allQuestions[idx].position.z
+      };
+    }
+  }
+
   try {
     let path = '/api/questions/random';
     const exclude = recentRandomIds.filter(Boolean);
     if (exclude.length) path += `?exclude=${exclude.map(encodeURIComponent).join(',')}`;
     const res = await apiRequest(path);
-    const payload = apiData(res) || {};
-    return payload.question || payload || null;
+    const q = asQuestion(apiData(res));
+    if (q) return q;
   } catch (err) {
     console.warn('random question failed', err);
-    return null;
   }
+
+  // Local fallback
+  let pool = allQuestions.filter(q => !recentRandomIds.includes(q.id));
+  if (pool.length === 0) {
+    recentRandomIds = [];
+    pool = allQuestions.slice();
+  }
+  if (pool.length === 0) return null;
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  return {
+    id: pick.id,
+    text: pick.text,
+    x: pick.position.x,
+    y: pick.position.y,
+    z: pick.position.z
+  };
 }
 
 // Database-backed search — operates over every active question in
@@ -1549,8 +1846,7 @@ async function fetchSearchResults(query) {
   try {
     let path = `/api/questions/search?q=${encodeURIComponent(query)}&limit=8`;
     const res = await apiRequest(path);
-    const payload = apiData(res) || {};
-    return payload.questions || [];
+    return asList(apiData(res), 'questions');
   } catch (err) {
     console.warn('search failed', err);
     return [];
@@ -1560,8 +1856,7 @@ async function fetchSearchResults(query) {
 async function fetchReplies(questionId) {
   try {
     const res = await apiRequest(`/api/questions/${encodeURIComponent(questionId)}/replies`);
-    const payload = apiData(res) || {};
-    return payload.replies || [];
+    return asList(apiData(res), 'replies');
   } catch (err) {
     console.warn('fetch replies failed', err);
     return [];
@@ -1571,8 +1866,7 @@ async function fetchReplies(questionId) {
 async function fetchTopics() {
   try {
     const res = await apiRequest('/api/topics');
-    const payload = apiData(res) || {};
-    return payload.topics || [];
+    return asList(apiData(res), 'topics');
   } catch (err) {
     console.warn('fetch topics failed', err);
     return [];
@@ -1669,6 +1963,7 @@ const SPHERE_RADIUS = 2;
 
 // Track materials for theme switching (wire skin + shared)
 const themeMaterials = [];
+const accentMaterials = []; // materials that stay gold/amber
 
 function lineMat(color = 0x0a0a0a, opacity = 1) {
   const mat = new THREE.LineBasicMaterial({
@@ -2438,6 +2733,47 @@ function updateSkinFade() {
 buildWireSkin();
 skinOpacity.wire = 1;
 
+// Accent: tint one great circle + spiral on wire/lattice skins when present
+function applyAccentTints() {
+  const accentHex = currentTheme === 'dark' ? 0xd3ac6e : 0xb08a4e;
+  const faintHex = currentTheme === 'dark' ? 0xc9a86c : 0xb08a4e;
+  for (const name of ['wire', 'lattice']) {
+    const g = skinGroups[name];
+    if (!g) continue;
+    let circleCount = 0;
+    g.traverse(obj => {
+      if (obj.isLineLoop || obj.isLine) {
+        if (obj.userData.isAccentCircle) {
+          obj.material.color.setHex(accentHex);
+        } else if (!obj.userData.accentTagged && circleCount === 0 && obj.geometry && obj.geometry.attributes && obj.geometry.attributes.position && obj.geometry.attributes.position.count > 100) {
+          // first large circle
+          obj.userData.isAccentCircle = true;
+          obj.userData.accentTagged = true;
+          circleCount++;
+          if (obj.material) {
+            obj.material.color.setHex(accentHex);
+            if (obj.material.opacity > 0.3) obj.material.opacity = 0.55;
+          }
+        }
+      }
+      if (obj.isMesh && obj.geometry && obj.geometry.type === 'SphereGeometry' && obj.geometry.parameters && obj.geometry.parameters.radius < 0.01) {
+        // spiral / ambient small dots — faint gold on spiral group only if parent is spiral-ish
+        if (obj.parent && obj.parent.children && obj.parent.children.length > 100) {
+          if (!obj.userData.accentSpiral) {
+            obj.userData.accentSpiral = true;
+          }
+          if (obj.material && obj.userData.accentSpiral) {
+            obj.material.color.setHex(faintHex);
+            if (obj.material.opacity > 0.2) obj.material.opacity = 0.18;
+          }
+        }
+      }
+    });
+  }
+}
+try { applyAccentTints(); } catch (e) {}
+
+
 // Restore saved skin
 (function initSkin() {
   let saved = 'wire';
@@ -2649,52 +2985,190 @@ const panelReport = document.getElementById('panel-report');
 
 let activeQuestion = null;
 let savedCameraState = null;
+let activeQuestionReplies = [];
+let activeThreadParentId = null;
+let countdownInterval = null;
+const panelCountdown = document.getElementById('panel-countdown');
+const panelReplyLabel = document.getElementById('panel-reply-label');
+
+function formatCountdown(expiresAtISO) {
+  if (!expiresAtISO) return null;
+  const end = new Date(expiresAtISO).getTime();
+  if (isNaN(end)) return null;
+  const ms = end - Date.now();
+  if (ms <= 0) return { text: '0H 00M 00S', minutesLeft: 0 };
+  const totalSec = Math.floor(ms / 1000);
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor((totalSec % 3600) / 60);
+  const s = totalSec % 60;
+  const text = `${h}H ${String(m).padStart(2, '0')}M ${String(s).padStart(2, '0')}S`;
+  return { text, minutesLeft: totalSec / 60 };
+}
+
+function applyCountdownClass(el, minutesLeft) {
+  if (!el) return;
+  el.classList.remove('urgent', 'critical');
+  if (minutesLeft < 10 / 60) el.classList.add('critical');
+  else if (minutesLeft < 60) el.classList.add('urgent');
+}
+
+function updateAllCountdowns() {
+  if (!activeQuestion) return;
+  const exp = activeQuestion.expires_at;
+  const main = formatCountdown(exp);
+  if (panelCountdown) {
+    if (main) {
+      panelCountdown.textContent = main.text;
+      applyCountdownClass(panelCountdown, main.minutesLeft);
+    } else {
+      panelCountdown.textContent = '';
+    }
+  }
+  panelReplies.querySelectorAll('.reply-countdown').forEach(el => {
+    const iso = el.dataset.expires || exp;
+    const c = formatCountdown(iso);
+    if (c) {
+      el.textContent = c.text;
+      applyCountdownClass(el, c.minutesLeft);
+    }
+  });
+}
+
+function startCountdownTicker() {
+  if (countdownInterval) clearInterval(countdownInterval);
+  updateAllCountdowns();
+  countdownInterval = setInterval(updateAllCountdowns, 1000);
+}
+
+function stopCountdownTicker() {
+  if (countdownInterval) {
+    clearInterval(countdownInterval);
+    countdownInterval = null;
+  }
+  if (panelCountdown) panelCountdown.textContent = '';
+}
 
 function flyToQuestion(q, onArrive) {
-  // Ensure it's visible in the pool
   ensureVisible(q.id);
   syncVisiblePoints();
-
   const dir = q.position.clone().normalize();
   const targetCamPos = dir.clone().multiplyScalar(SPHERE_RADIUS + 1.4);
   targetCamPos.y += 0.15;
-
   animateCamera(targetCamPos, new THREE.Vector3(0, 0, 0), 1400, onArrive);
 }
 
+function childCount(replyId) {
+  return activeQuestionReplies.filter(r => r.parent_reply_id === replyId).length;
+}
+
 function renderReplies(replies) {
+  activeQuestionReplies = Array.isArray(replies) ? replies.slice() : [];
+  activeThreadParentId = null;
+  if (panelReplyLabel) panelReplyLabel.textContent = 'leave a thought';
   panelReplies.innerHTML = '';
-  if (!replies || replies.length === 0) {
+
+  const topLevel = activeQuestionReplies.filter(r => !r.parent_reply_id);
+  if (topLevel.length === 0) {
     const empty = document.createElement('div');
     empty.className = 'panel-replies-empty';
     empty.textContent = 'no replies yet — be the first to answer.';
     panelReplies.appendChild(empty);
     return;
   }
-  for (const r of replies) {
+
+  for (const r of topLevel) {
     const el = document.createElement('div');
-    el.className = 'panel-reply-item' + (r.parent_reply_id ? ' nested' : '');
-    el.textContent = r.text;
+    el.className = 'panel-reply-item';
+    el.dataset.replyId = r.id;
+
+    const textSpan = document.createElement('span');
+    textSpan.textContent = r.text;
+    el.appendChild(textSpan);
+
+    const kids = childCount(r.id);
+    if (kids > 0) {
+      const badge = document.createElement('span');
+      badge.className = 'reply-child-badge';
+      badge.textContent = `${kids} ${kids === 1 ? 'reply' : 'replies'}`;
+      el.appendChild(badge);
+    }
+
+    const arrow = document.createElement('span');
+    arrow.className = 'reply-arrow';
+    arrow.textContent = ' →';
+    el.appendChild(arrow);
+
+    const cd = document.createElement('span');
+    cd.className = 'reply-countdown';
+    cd.dataset.expires = r.expires_at || (activeQuestion && activeQuestion.expires_at) || '';
+    el.appendChild(cd);
+
+    el.addEventListener('click', () => openReplyThread(r.id));
     panelReplies.appendChild(el);
   }
+  updateAllCountdowns();
+}
+
+function openReplyThread(parentId) {
+  const parent = activeQuestionReplies.find(r => r.id === parentId);
+  if (!parent) return;
+  activeThreadParentId = parentId;
+  if (panelReplyLabel) panelReplyLabel.textContent = 'reply to this thought';
+  panelReplies.innerHTML = '';
+
+  const back = document.createElement('button');
+  back.type = 'button';
+  back.className = 'panel-thread-back';
+  back.textContent = '← back to question';
+  back.addEventListener('click', () => renderReplies(activeQuestionReplies));
+  panelReplies.appendChild(back);
+
+  const quote = document.createElement('div');
+  quote.className = 'panel-thread-quote';
+  quote.textContent = parent.text;
+  panelReplies.appendChild(quote);
+
+  const parentCd = document.createElement('span');
+  parentCd.className = 'reply-countdown';
+  parentCd.dataset.expires = parent.expires_at || (activeQuestion && activeQuestion.expires_at) || '';
+  panelReplies.appendChild(parentCd);
+
+  const children = activeQuestionReplies.filter(r => r.parent_reply_id === parentId);
+  for (const r of children) {
+    const el = document.createElement('div');
+    el.className = 'panel-reply-item nested';
+    el.textContent = r.text;
+    const cd = document.createElement('span');
+    cd.className = 'reply-countdown';
+    cd.dataset.expires = r.expires_at || (activeQuestion && activeQuestion.expires_at) || '';
+    el.appendChild(cd);
+    panelReplies.appendChild(el);
+  }
+  updateAllCountdowns();
 }
 
 async function openQuestion(q) {
   activeQuestion = q;
+  activeThreadParentId = null;
+  rememberRecent(q.id);
+  if (freshIds.includes(q.id)) {
+    freshIds = freshIds.filter(id => id !== q.id);
+  }
+
   panelQuestion.textContent = `«${q.text}»`;
   panelReply.value = '';
   panelReplies.innerHTML = '';
+  if (panelReplyLabel) panelReplyLabel.textContent = 'leave a thought';
 
-  // Confirm with backend (source of truth); keep local text if request fails
   try {
     const res = await apiRequest(`/api/questions/${encodeURIComponent(q.id)}`);
-    const payload = apiData(res) || {};
-    const fresh = payload.question || null;
+    const fresh = asQuestion(apiData(res));
     if (fresh && fresh.text && activeQuestion && activeQuestion.id === q.id) {
       panelQuestion.textContent = `«${fresh.text}»`;
       if (fresh.x != null) {
         q.position = new THREE.Vector3(fresh.x, fresh.y, fresh.z);
       }
+      if (fresh.expires_at) q.expires_at = fresh.expires_at;
     }
   } catch (err) {
     console.warn('open question refresh failed', err);
@@ -2710,7 +3184,6 @@ async function openQuestion(q) {
     setTimeout(() => panelReply.focus(), 100);
   });
 
-  // Highlight
   const slot = questionToPool.get(q.id);
   if (slot) {
     slot.core.material.opacity = 1;
@@ -2718,12 +3191,17 @@ async function openQuestion(q) {
   }
 
   const replies = await fetchReplies(q.id);
-  // The person may have already navigated away by the time this resolves.
-  if (activeQuestion && activeQuestion.id === q.id) renderReplies(replies);
+  if (activeQuestion && activeQuestion.id === q.id) {
+    renderReplies(replies);
+    startCountdownTicker();
+  }
 }
 
 function closePanel() {
   panel.classList.remove('open');
+  stopCountdownTicker();
+  activeThreadParentId = null;
+  activeQuestionReplies = [];
   if (activeQuestion) {
     const slot = questionToPool.get(activeQuestion.id);
     if (slot) {
@@ -2753,15 +3231,19 @@ panelSubmit.addEventListener('click', async () => {
 
   panelSubmit.style.opacity = '0.4';
   try {
+    const body = { text };
+    if (activeThreadParentId) body.parent_reply_id = activeThreadParentId;
     const res = await apiRequest(`/api/questions/${encodeURIComponent(question.id)}/replies`, {
       method: 'POST',
-      body: JSON.stringify({ text })
+      body: JSON.stringify(body)
     });
-    const reply = (apiData(res) || {}).reply;
+    const payload = apiData(res) || {};
+    const reply = payload.reply || payload;
     panelReply.value = '';
-    if (activeQuestion && activeQuestion.id === question.id) {
-      const replies = await fetchReplies(question.id);
-      renderReplies(replies);
+    if (activeQuestion && activeQuestion.id === question.id && reply && reply.id) {
+      activeQuestionReplies.push(reply);
+      if (activeThreadParentId) openReplyThread(activeThreadParentId);
+      else renderReplies(activeQuestionReplies);
     }
     showToast("your thought has been left, quietly.");
   } catch (err) {
@@ -2803,21 +3285,25 @@ const leaveSubmit = document.getElementById('leave-submit');
 const leaveTopicRow = document.getElementById('leave-topic-row');
 const btnLeave = document.getElementById('btn-leave');
 
-// Fallback categories if backend /api/topics is empty or slow
+// Used if /api/topics is empty or slow — mirrors common SQL categories
 const FALLBACK_TOPICS = [
   { slug: 'love', name: 'Love' },
   { slug: 'life', name: 'Life' },
   { slug: 'philosophy', name: 'Philosophy' },
   { slug: 'science', name: 'Science' },
   { slug: 'technology', name: 'Technology' },
-  { slug: 'art', name: 'Art' },
-  { slug: 'society', name: 'Society' },
-  { slug: 'self', name: 'Self' },
-  { slug: 'nature', name: 'Nature' },
-  { slug: 'mystery', name: 'Mystery' }
+  { slug: 'friendship', name: 'Friendship' },
+  { slug: 'loneliness', name: 'Loneliness' },
+  { slug: 'future', name: 'Future' },
+  { slug: 'memories', name: 'Memories' },
+  { slug: 'work', name: 'Work' },
+  { slug: 'creativity', name: 'Creativity' },
+  { slug: 'relationships', name: 'Relationships' },
+  { slug: 'money', name: 'Money' },
+  { slug: 'other', name: 'Other' }
 ];
 
-let leaveTopicSlug = null; // category chosen when leaving a question
+let leaveTopicSlug = null;
 let leaveTopicsCache = null;
 
 function renderLeaveTopics(topics) {
@@ -2826,10 +3312,9 @@ function renderLeaveTopics(topics) {
   const list = (topics && topics.length) ? topics : FALLBACK_TOPICS;
   leaveTopicsCache = list;
 
-  // Optional "none" so category is not required
   const nonePill = document.createElement('button');
   nonePill.type = 'button';
-  nonePill.className = 'leave-topic-pill' + (leaveTopicSlug === null ? ' active' : '');
+  nonePill.className = 'leave-topic-pill' + (leaveTopicSlug == null ? ' active' : '');
   nonePill.textContent = 'Any';
   nonePill.addEventListener('click', () => {
     leaveTopicSlug = null;
@@ -2864,16 +3349,8 @@ async function ensureLeaveTopics() {
 
 btnLeave.addEventListener('click', () => {
   leaveModal.classList.add('open');
-  leaveTopicSlug = currentTopicSlug; // pre-select active filter if any
-  ensureLeaveTopics().then(() => {
-    // re-apply active state after render
-    if (leaveTopicRow) {
-      leaveTopicRow.querySelectorAll('.leave-topic-pill').forEach(p => {
-        const slug = p.dataset.slug || null;
-        p.classList.toggle('active', slug === leaveTopicSlug || (slug == null && leaveTopicSlug == null && p.textContent === 'Any'));
-      });
-    }
-  });
+  leaveTopicSlug = currentTopicSlug;
+  ensureLeaveTopics();
   setTimeout(() => leaveInput.focus(), 100);
 });
 
@@ -2896,17 +3373,13 @@ async function submitLeave() {
   let row;
   try {
     const body = { text };
-    // Prefer the category the user just picked in the leave modal;
-    // fall back to the settings-panel topic filter if they left it as Any.
     const slug = leaveTopicSlug || currentTopicSlug;
-    if (slug) {
-      body.topic_slug = slug;
-    }
+    if (slug) body.topic_slug = slug;
     const result = await apiRequest('/api/questions', {
       method: 'POST',
       body: JSON.stringify(body)
     });
-    row = (apiData(result) || {}).question || result.question;
+    row = asQuestion(apiData(result)) || asQuestion(result);
     if (!row || !row.id) throw new Error('question was not saved');
   } catch (err) {
     leaveSubmit.style.opacity = '';
@@ -2915,14 +3388,12 @@ async function submitLeave() {
   }
   leaveSubmit.style.opacity = '';
 
-  // Recompute visibility and ensure the new one is visible
   const idx = upsertWorkingSet(row);
   const q = allQuestions[idx];
   computeVisibleIndices();
   ensureVisible(q.id);
   syncVisiblePoints();
 
-  // Animate appearance
   const slot = questionToPool.get(q.id);
   if (slot) {
     slot.currentScale = 0.01;
@@ -2942,7 +3413,10 @@ async function submitLeave() {
   leaveInput.value = '';
   leaveTopicSlug = null;
 
+  // Prioritize this fresh question in random + open it after grow
+  freshIds = [q.id, ...freshIds.filter(id => id !== q.id)].slice(0, 5);
   showToast("something new, somewhere in the sphere.");
+  setTimeout(() => openQuestion(q), 900);
 }
 
 // ============================================================
@@ -3230,6 +3704,7 @@ function applyTheme(theme, originX = window.innerWidth / 2, originY = window.inn
 
   currentTheme = theme;
   try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
+  try { applyAccentTints(); } catch (e) {}
 }
 
 // Init theme
@@ -3270,6 +3745,11 @@ settingsBtn.addEventListener('click', (e) => {
   e.stopPropagation();
   const isOpen = settingsPanel.classList.toggle('open');
   settingsBtn.classList.toggle('open', isOpen);
+  if (isOpen) {
+    settingsPanel.querySelectorAll('.sp-item').forEach((el, i) => {
+      el.style.animationDelay = `${i * 0.02}s`;
+    });
+  }
 });
 
 document.addEventListener('click', (e) => {
@@ -3307,28 +3787,54 @@ searchInput.addEventListener('input', () => {
 // never limited to the ~48 questions currently on the sphere, and it only
 // ever returns active, non-expired, approved questions.
 let searchToken = 0;
+const searchClear = document.getElementById('search-clear');
+const searchSpinner = document.getElementById('search-spinner');
+const searchCount = document.getElementById('search-count');
+
+function updateSearchClear() {
+  if (!searchClear) return;
+  searchClear.classList.toggle('visible', !!searchInput.value.trim());
+}
+searchInput.addEventListener('input', updateSearchClear);
+if (searchClear) {
+  searchClear.addEventListener('click', () => {
+    searchInput.value = '';
+    searchResults.innerHTML = '';
+    if (searchCount) searchCount.textContent = '';
+    updateSearchClear();
+    searchInput.focus();
+  });
+}
+
 async function performSearch() {
   const q = searchInput.value.trim();
   searchResults.innerHTML = '';
-  if (!q) return;
+  if (searchCount) searchCount.textContent = '';
+  if (!q) {
+    if (searchSpinner) searchSpinner.classList.remove('visible');
+    return;
+  }
 
   const myToken = ++searchToken;
-  const loading = document.createElement('div');
-  loading.className = 'search-empty';
-  loading.textContent = 'searching...';
-  searchResults.appendChild(loading);
+  if (searchSpinner) searchSpinner.classList.add('visible');
 
   const rows = await fetchSearchResults(q);
-  if (myToken !== searchToken) return; // a newer search superseded this one
+  if (myToken !== searchToken) return;
 
+  if (searchSpinner) searchSpinner.classList.remove('visible');
   searchResults.innerHTML = '';
 
   if (rows.length === 0) {
     const empty = document.createElement('div');
     empty.className = 'search-empty';
-    empty.textContent = 'nothing found, for now.';
+    empty.innerHTML = 'nothing found, for now.<div class="search-empty-hint">try a different word, or leave a new question</div>';
     searchResults.appendChild(empty);
+    if (searchCount) searchCount.textContent = '';
     return;
+  }
+
+  if (searchCount) {
+    searchCount.textContent = `${rows.length} question${rows.length === 1 ? '' : 's'} found`;
   }
 
   for (const row of rows) {
@@ -3339,6 +3845,8 @@ async function performSearch() {
       searchWrap.classList.remove('open');
       searchInput.value = '';
       searchResults.innerHTML = '';
+      if (searchCount) searchCount.textContent = '';
+      updateSearchClear();
       settingsPanel.classList.remove('open');
       settingsBtn.classList.remove('open');
       const idx = upsertWorkingSet(row);
@@ -3560,7 +4068,7 @@ spContact.addEventListener('click', () => {
   updateMiniTheme();
   contactModal.classList.add('open');
   startMiniAnimation();
-  setTimeout(() => contactInput.focus(), 300);
+  setTimeout(() => contactInput.focus(), 200);
 });
 
 contactCancel.addEventListener('click', () => {
@@ -3607,6 +4115,32 @@ window.addEventListener('resize', () => {
     miniRenderer.setSize(window.innerWidth, window.innerHeight);
   }
 });
+
+
+// ============================================================
+// SPHERE CLOCK (local time, decorative)
+// ============================================================
+(function initSphereClock() {
+  const hourHand = document.getElementById('clock-hand-hour');
+  const minuteHand = document.getElementById('clock-hand-minute');
+  const secondHand = document.getElementById('clock-hand-second');
+  const timeLabel = document.getElementById('sphere-clock-time');
+  if (!hourHand || !minuteHand || !secondHand || !timeLabel) return;
+
+  function tick() {
+    const now = new Date();
+    const h = now.getHours() % 12;
+    const m = now.getMinutes();
+    const s = now.getSeconds();
+    const ms = now.getMilliseconds();
+    hourHand.style.transform = `rotate(${(h + m / 60) * 30}deg)`;
+    minuteHand.style.transform = `rotate(${(m + s / 60) * 6}deg)`;
+    secondHand.style.transform = `rotate(${(s + ms / 1000) * 6}deg)`;
+    timeLabel.textContent = `${String(now.getHours()).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+  }
+  tick();
+  setInterval(tick, 250);
+})();
 
 // ============================================================
 // INIT
@@ -3695,7 +4229,7 @@ document.querySelectorAll('[data-nav="contact"]').forEach((el) => {
     }
     contactModal.classList.add('open');
     startMiniAnimation();
-    setTimeout(() => contactInput.focus(), 300);
+    setTimeout(() => contactInput.focus(), 200);
   });
 });
 
