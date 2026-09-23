@@ -25,6 +25,8 @@
     --shadow-soft: 0 30px 80px -30px rgba(0, 0, 0, 0.12);
     --shadow-deep: 0 20px 60px -20px rgba(0, 0, 0, 0.18), 0 4px 12px -4px rgba(0, 0, 0, 0.06);
     --sphere-color: #0a0a0a;
+    --accent: #b08a4e;
+    --accent-soft: rgba(176, 138, 78, 0.14);
   }
 
   [data-theme="dark"] {
@@ -40,6 +42,8 @@
     --shadow-soft: 0 30px 80px -30px rgba(0, 0, 0, 0.6);
     --shadow-deep: 0 20px 60px -20px rgba(0, 0, 0, 0.8), 0 4px 12px -4px rgba(0, 0, 0, 0.5);
     --sphere-color: #f0f0f0;
+    --accent: #d3ac6e;
+    --accent-soft: rgba(211, 172, 110, 0.14);
   }
 
   html, body {
@@ -308,6 +312,41 @@
     background: var(--bg);
   }
 
+  .sp-skin-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0 6px 14px;
+    justify-content: center;
+  }
+
+  .sp-skin-option {
+    flex: 1 1 auto;
+    min-width: 58px;
+    max-width: 100px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 10px 0;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.35s ease, color 1.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .sp-skin-option:hover {
+    color: var(--fg);
+    border-color: var(--border-strong);
+  }
+  .sp-skin-option.active {
+    color: var(--fg);
+    border-color: var(--fg);
+    background: var(--bg);
+  }
+
   #topic-row {
     display: flex;
     flex-wrap: wrap;
@@ -360,6 +399,7 @@
   }
   .sp-item:hover {
     background: var(--border);
+    color: var(--accent);
     transform: scale(1.02);
   }
   .sp-item:active {
@@ -645,8 +685,50 @@
   #leave-input:focus { border-bottom-color: var(--fg); }
   #leave-input::placeholder { color: var(--muted-softer); font-style: italic; }
 
+  #leave-topic-label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 9px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--muted-soft);
+    margin-top: 28px;
+    margin-bottom: 12px;
+    transition: color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  #leave-topic-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .leave-topic-pill {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 12px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.3s ease, color 1.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .leave-topic-pill:hover { color: var(--fg); border-color: var(--border-strong); }
+  .leave-topic-pill.active {
+    color: var(--fg);
+    border-color: var(--fg);
+    background: var(--bg);
+  }
+
   #leave-actions {
-    margin-top: 32px;
+    margin-top: 28px;
     display: flex;
     justify-content: center;
     gap: 32px;
@@ -878,11 +960,11 @@
   }
   .page-kicker {
     font-family: 'Inter', sans-serif;
-    font-weight: 200;
+    font-weight: 400;
     font-size: 10px;
     letter-spacing: 0.4em;
     text-transform: uppercase;
-    color: var(--muted);
+    color: var(--accent);
     margin-bottom: 12px;
   }
   .page-title {
@@ -892,6 +974,18 @@
     line-height: 1.25;
     color: var(--fg);
     margin-bottom: 10px;
+    position: relative;
+    padding-bottom: 16px;
+  }
+  .page-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.7;
   }
   .page-lead {
     font-family: 'Cormorant Garamond', serif;
@@ -904,12 +998,14 @@
   }
   .page-body h2 {
     font-family: 'Inter', sans-serif;
-    font-weight: 300;
+    font-weight: 400;
     font-size: 11px;
     letter-spacing: 0.28em;
     text-transform: uppercase;
     color: var(--fg);
     margin: 28px 0 10px;
+    padding-left: 12px;
+    border-left: 2px solid var(--accent);
   }
   .page-body p, .page-body li {
     font-family: 'Inter', sans-serif;
@@ -955,7 +1051,14 @@
   .page-close:hover { color: var(--fg); }
   .page-section { display: none; }
   .page-section.active { display: block; }
-  .faq-item { margin-bottom: 22px; }
+  .page-link {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--accent-soft);
+    transition: border-color 0.2s ease;
+  }
+  .page-link:hover { border-color: var(--accent); }
+  .faq-item { margin-bottom: 22px; padding-left: 14px; border-left: 1px solid var(--border); }
   .faq-q {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 400;
@@ -963,6 +1066,7 @@
     margin-bottom: 6px;
     color: var(--fg);
   }
+  .faq-q::before { content: '— '; color: var(--accent); }
   .api-preview {
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -1038,6 +1142,17 @@
 
 <div id="settings-panel" aria-label="Menu disc">
   <div class="sp-disc-title">Menu</div>
+  <div class="sp-section-label">Sphere</div>
+  <div class="sp-skin-row">
+    <button class="sp-skin-option active" data-skin-value="wire">Wire</button>
+    <button class="sp-skin-option" data-skin-value="lattice">Lattice</button>
+    <button class="sp-skin-option" data-skin-value="nested">Nested</button>
+    <button class="sp-skin-option" data-skin-value="nebula">Nebula</button>
+    <button class="sp-skin-option" data-skin-value="aurora">Aurora</button>
+    <button class="sp-skin-option" data-skin-value="circuit">Circuit</button>
+    <button class="sp-skin-option" data-skin-value="cluster">Cluster</button>
+  </div>
+  <div class="sp-divider"></div>
   <div class="sp-section-label">Theme</div>
   <div class="sp-theme-row">
     <button class="sp-theme-option active" data-theme-value="light">Light</button>
@@ -1059,7 +1174,6 @@
   <button class="sp-item" data-page="guidelines">Guidelines</button>
   <button class="sp-item" data-page="privacy">Privacy</button>
   <button class="sp-item" data-page="terms">Terms</button>
-  <button class="sp-item" data-page="api">API</button>
   <button class="sp-item" id="sp-contact">Contact</button>
 </div>
 
@@ -1078,6 +1192,8 @@
   <div id="leave-inner">
     <div id="leave-label">leave something in the sphere</div>
     <input id="leave-input" type="text" placeholder="a question, a thought, a word..." maxlength="200" />
+    <div id="leave-topic-label">what kind of thought is this?</div>
+    <div id="leave-topic-row"></div>
     <div id="leave-actions">
       <button class="leave-btn" id="leave-cancel">nevermind</button>
       <button class="leave-btn primary" id="leave-submit">place it</button>
@@ -1122,7 +1238,7 @@
         <h2>How it feels</h2>
         <p>You can leave a question, sit with someone else’s, send a short reply, or ask to be taken somewhere at random. Search exists for when a word is already in mind. Themes exist so the room can be light or dark.</p>
         <h2>What this version is</h2>
-        <p>This is a frontend-first prototype. The sphere, the motion, and the pages you are reading live in the browser. Optional local storage may remember questions and theme choice on your device. A production backend is planned; it is not the current experience.</p>
+        <p>This is a live, independent project. Questions you leave are stored on a real server for 30 hours, then automatically deleted. There are no accounts, no emails required, and no analytics. The only thing stored on your device is your theme preference and your chosen sphere skin.</p>
         <p>Questionable Sphere is not trying to replace every kind of conversation. It is trying to make a few questions easier to find, and a few thoughts easier to leave behind.</p>
       </div>
     </section>
@@ -1140,9 +1256,6 @@
         <div class="faq-item"><div class="faq-q">How does the sphere work?</div><p>It is a 3D object you can rotate a full 360° and zoom. Points are placed on the surface. Click a point to open it. The camera can travel to that point.</p></div>
         <div class="faq-item"><div class="faq-q">Can I search questions?</div><p>Yes. Open settings and choose “Search the sphere.” Matching points can be opened directly.</p></div>
         <div class="faq-item"><div class="faq-q">How does random discovery work?</div><p>“Take me somewhere” chooses a question you have not just seen, flies the camera there, and opens it.</p></div>
-        <div class="faq-item"><div class="faq-q">How can I report something?</div><p>Use Contact Us and describe what you saw. A dedicated report system is planned for a later backend. There is no guaranteed moderation pipeline in this prototype.</p></div>
-        <div class="faq-item"><div class="faq-q">Will there be an API?</div><p>It is planned. See the API page. Endpoints shown there are a preview, not a live service.</p></div>
-        <div class="faq-item"><div class="faq-q">Does Questionable Sphere use tracking cookies?</div><p>This prototype does not intentionally use cookies for advertising or behavioral tracking. The browser may still store a theme preference and locally saved questions. Hosting platforms can use necessary technical cookies that we do not control from this file.</p></div>
       </div>
     </section>
 
@@ -1175,96 +1288,98 @@
     <section class="page-section" id="page-privacy" data-title="Questionable Sphere Privacy Policy">
       <div class="page-kicker">Privacy</div>
       <h1 class="page-title">Privacy Policy</h1>
-      <p class="page-lead">A first draft for the current product direction. Last updated: [Effective Date].</p>
+      <p class="page-lead">A plain-language summary of what this project does and does not do. Last updated: September 23, 2026.</p>
       <div class="page-body">
-        <p>Questionable Sphere is designed to minimize the personal information required to use the service. This page describes intended behavior. It is not a claim that the product collects nothing at all.</p>
-        <h2>Who we are</h2>
-        <p>This service is operated by [Company / Operator Name] ([Legal Entity]). Contact: [Contact Email]. Jurisdiction: [Jurisdiction].</p>
-        <h2>Ordinary use of the sphere</h2>
-        <p>No email address is required. No password is required. No traditional account is required. You may explore, leave a question, and reply without creating an account.</p>
-        <p>Questions and replies you submit are user-generated content. In this prototype they may remain in your browser (for example via local storage). If a production backend is connected later, submitted text may be stored on servers so other people can see it while it is publicly active.</p>
-        <p>We do not intentionally use cookies for advertising or behavioral tracking. We do not intentionally sell personal information.</p>
-        <p>Your browser or device may still keep technical data that any website can encounter: theme preference, local copies of questions you left, and ordinary connection metadata seen by a host (such as IP address in server logs) if the file is served from the internet.</p>
-        <h2>API users (future)</h2>
-        <p>API access is not live. If an API account is offered later, that path is different from anonymous sphere use. An API account may require an email address, account details, credentials, and usage information needed to operate and secure the API. That collection would apply to API users, not to everyone who only turns the sphere.</p>
-        <h2>Service providers</h2>
-        <p>Infrastructure used to host or deliver the site may process limited information necessary to keep the service running. This draft does not list specific vendors because they may change.</p>
-        <h2>Retention</h2>
-        <p>Questions may have a public visibility period in a later version. Expiration from public discovery does not necessarily mean immediate, permanent deletion from every system. This prototype does not promise permanent deletion.</p>
-        <h2>Security</h2>
-        <p>Reasonable technical and organizational measures may be used as the product matures. No service is 100% secure. This frontend prototype should not be treated as a production security system.</p>
+        <p>Short version: we collect almost nothing, we know almost nothing about you, and anything you leave is gone in about 30 hours.</p>
+
+        <h2>What we collect</h2>
+        <p>When you leave a question or reply to one, the text is stored on our server so other people can see it while it is alive. After roughly 30 hours, it is deleted automatically. We also store the time it was posted, so we can show the sphere in order and know when to delete it.</p>
+        <p>That is the entire list. There is nothing else.</p>
+
+        <h2>What we do not collect</h2>
+        <p>We do not collect your name. We do not collect your email. We do not collect your phone number. We do not ask you to create an account. We do not know who you are.</p>
+        <p>We do not use cookies for advertising or tracking. We do not use analytics tools. We do not count how many people visit. We do not know where you came from. We do not know where you go next. We do not sell anything to anyone, ever, and we have nothing to sell.</p>
+
+        <h2>What your browser stores</h2>
+        <p>Your theme preference (light or dark) and your chosen sphere skin are saved in your own browser. That is all. You can clear them at any time by clearing your browser data. We never see them.</p>
+
+        <h2>How long your content lives</h2>
+        <p>Questions and replies are automatically deleted about 30 hours after they are posted. Contact messages you send us are kept only long enough for us to read and reply, then deleted.</p>
+
+        <h2>Anonymous by design</h2>
+        <p>You cannot be identified from anything we store. When you leave something, there is no record of who left it. When someone replies to you, you have no way to know it was them, and they have no way to know it was you. If you want to find a reply to something you wrote, search for the words you used within 30 hours. After that, it is gone.</p>
+
         <h2>Children</h2>
-        <p>Questionable Sphere is not directed at young children. If you believe a child has submitted personal information, contact [Contact Email]. Age requirements may be stated more precisely when a legal entity is confirmed.</p>
+        <p>This site is not for people under 18. We do not and cannot verify your age, but we ask that you do not use this site if you are under 18. The content is anonymous and we do not moderate it. We cannot guarantee what other people will write.</p>
+
+        <h2>Payments</h2>
+        <p>There are no payments. This is a free project. We are not asking you for money. Nobody owes us anything.</p>
+
         <h2>Changes</h2>
-        <p>This policy may be updated as the product evolves. The date above will change when it does.</p>
-        <p class="page-meta">Draft · replace placeholders before publishing as a legal document.</p>
+        <p>If this policy changes, the date below will change with it.</p>
+
+        <h2>Contact</h2>
+        <p>If anything here feels wrong, or if you want something removed, write to <a href="mailto:kindplay06@gmail.com" class="page-link">kindplay06@gmail.com</a>.</p>
+
+        <p class="page-meta">Last updated: September 23, 2026.</p>
       </div>
     </section>
 
     <section class="page-section" id="page-terms" data-title="Questionable Sphere Terms of Use">
       <div class="page-kicker">Terms</div>
       <h1 class="page-title">Terms of Use</h1>
-      <p class="page-lead">A first draft. Last updated: [Effective Date].</p>
+      <p class="page-lead">A plain-language set of rules for using this site. Last updated: September 23, 2026.</p>
       <div class="page-body">
-        <h2>Acceptance</h2>
-        <p>By using Questionable Sphere you agree to these terms. If you do not agree, do not use the service. Operator: [Company / Operator Name], [Contact Email], [Jurisdiction].</p>
-        <h2>The service</h2>
-        <p>Questionable Sphere is a visual conversation space. This version is a frontend prototype. Features, availability, and storage may change.</p>
-        <h2>Anonymous participation</h2>
-        <p>You may use the sphere without an account. You remain responsible for what you submit.</p>
-        <h2>User-generated content</h2>
-        <p>Questions, replies, and contact messages are your content. You grant the operator a limited license to display and moderate that content as needed to run the service. You represent that you have the right to submit it.</p>
-        <h2>Prohibited behavior</h2>
-        <p>Do not harass, threaten, exploit, spam, scam, impersonate, distribute illegal material, or share private information about others. See Community Guidelines.</p>
-        <h2>Moderation and reporting</h2>
-        <p>Content may be removed or restricted. Reporting currently happens through Contact Us. There is no guarantee of a particular response time in this prototype.</p>
+        <p>Short version: be kind, do not post anything private or harmful, and understand that this is a small independent project with no moderation team.</p>
+
+        <h2>What this is</h2>
+        <p>Questionable Sphere is a small independent project. It hosts a 3D sphere where anyone can leave anonymous questions and replies. Questions and replies are deleted automatically about 30 hours after they are posted. There are no accounts, no emails, and no payments.</p>
+
+        <h2>Who can use it</h2>
+        <p>Do not use this site if you are under 18. We cannot verify your age and we do not try to. If you are under 18, please close this page.</p>
+
+        <h2>Your content</h2>
+        <p>You own anything you post. By posting, you give us permission to display it on the sphere for about 30 hours and to delete it sooner if we need to. You promise that you have the right to post it and that it does not violate anyone else's rights.</p>
+
+        <h2>What you must not post</h2>
+        <p>Do not post any of the following:</p>
+        <ul>
+          <li>Anything illegal in India or in your country.</li>
+          <li>Threats, harassment, bullying, or hate directed at people or groups.</li>
+          <li>Any sexual content involving minors, or anything that exploits children.</li>
+          <li>Someone else's private information, including their real name, address, phone number, or photos.</li>
+          <li>Spam, scams, impersonation, or malicious links.</li>
+          <li>Anything that infringes someone else's copyright or trademark.</li>
+        </ul>
+
+        <h2>No moderation</h2>
+        <p>We do not read what people post. We do not have a moderation team. We cannot guarantee that what you see is safe, true, or appropriate. If something feels wrong, you can email us at the address below and we will do our best, but we cannot promise a response and we cannot promise to remove anything.</p>
+
+        <h2>Do not trust anything you read here</h2>
+        <p>Anything you read on this sphere was written by a stranger. It may be false, harmful, or a scam. Do not follow links you did not expect to see. Do not share personal information with anyone you meet here. Do not act on any advice you see here without thinking carefully first. Nobody on this site has been verified. Nobody is responsible for what they post except the person who posted it.</p>
+
+        <h2>Nothing is permanent</h2>
+        <p>Everything on this sphere is deleted after about 30 hours. If you leave something you want to keep, save it yourself. If someone replies to you, you have no way to know who they are. If you want to find a reply, search for the words you used before the 30 hours are up.</p>
+
         <h2>Availability</h2>
-        <p>The service may be interrupted, incomplete, or experimental. It is offered as-is.</p>
-        <h2>Intellectual property</h2>
-        <p>The Questionable Sphere name, design, and software remain with the operator except for the license you grant in your own submissions.</p>
-        <h2>Third parties</h2>
-        <p>Fonts, libraries, and hosting providers are third-party services with their own terms.</p>
-        <h2>API</h2>
-        <p>A public API is planned and not currently provided. Future API use may require a separate account and additional terms.</p>
-        <h2>Suspension</h2>
-        <p>Access may be limited if these terms or the guidelines are broken, or if the service is taken offline.</p>
-        <h2>Disclaimers and liability</h2>
-        <p>The service is provided without warranties of uninterrupted, error-free, or fit-for-purpose operation, to the extent permitted by law. Liability is limited to the fullest extent permitted by applicable law. Nothing here excludes liability that cannot legally be excluded.</p>
+        <p>This is a small free project. It may go down, be slow, or change without notice. We do not promise any level of service. We do not promise that anything you post will be visible, that anything you see will be accurate, or that the site will be running tomorrow.</p>
+
+        <h2>Liability</h2>
+        <p>This service is provided as-is, with no warranties of any kind. To the extent permitted by law, we are not responsible for anything that happens to you, or anything you do, as a result of using this site. Because this is a free service, our liability to you is zero.</p>
+
+        <h2>No payments, no subscriptions</h2>
+        <p>This project is completely free. We are not asking anyone for money. There is no subscription, no plan, no payment method, and no purchase of any kind. Do not send money to anyone claiming to represent Questionable Sphere.</p>
+
         <h2>Changes</h2>
-        <p>These terms may change. Continued use after an update means you accept the revised terms.</p>
+        <p>These terms may change. Continued use after a change means you accept the new version.</p>
+
         <h2>Contact</h2>
-        <p>[Contact Email]</p>
-        <p class="page-meta">Draft · not legal advice · placeholders must be completed.</p>
+        <p>If you need to reach us for any reason, write to <a href="mailto:kindplay06@gmail.com" class="page-link">kindplay06@gmail.com</a>. This is a real inbox and we will read it.</p>
+
+        <p class="page-meta">Last updated: September 23, 2026. Not legal advice.</p>
       </div>
     </section>
 
-    <section class="page-section" id="page-api" data-title="Questionable Sphere API">
-      <div class="page-kicker">Developers</div>
-      <h1 class="page-title">API</h1>
-      <div class="coming-soon">API — Coming Soon</div>
-      <p class="page-lead">A preview of how developers and businesses might one day work with the sphere.</p>
-      <div class="page-body">
-        <p>There is no live API in this prototype. No keys are issued. The examples below are planned documentation, not working endpoints.</p>
-        <h2>Possible future uses</h2>
-        <ul>
-          <li>Create and retrieve questions</li>
-          <li>Build question-based experiences</li>
-          <li>Embed a sphere</li>
-          <li>Create private or brand-specific spheres</li>
-          <li>Read conversation data only with the right permissions</li>
-        </ul>
-        <h2>Planned shape (preview)</h2>
-        <div class="api-preview">
-          <code>Authentication — API account + email (not available yet)</code>
-          <code>GET /questions</code>
-          <code>GET /questions/:id</code>
-          <code>POST /questions</code>
-          <code>GET /topics</code>
-        </div>
-        <p>When an API exists, access will require an API account and an email address. Ordinary visitors to the sphere will still be able to explore without that account.</p>
-        <p class="page-note">Do not treat this page as a promise of dates, pricing, or exact routes.</p>
-      </div>
-    </section>
   </div>
 </div>
 
@@ -1291,7 +1406,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 // LIVE BACKEND — Railway → Supabase
 // Browser never talks to Supabase directly. No service-role key here.
 // ============================================================
-const API_BASE_URL = "https://effective-pancake-production.up.railway.app";
+const API_BASE_URL = "https://probable-meme-production.up.railway.app";
 
 async function apiRequest(path, options = {}) {
   const opts = { ...options };
@@ -1518,6 +1633,8 @@ renderer.setClearColor(0xffffff, 1);
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xffffff);
+// Soft atmospheric depth — matches theme, never overpowering
+scene.fog = new THREE.FogExp2(0xffffff, 0.018);
 
 const camera = new THREE.PerspectiveCamera(
   45,
@@ -1550,7 +1667,7 @@ scene.add(sphereGroup);
 
 const SPHERE_RADIUS = 2;
 
-// Track materials for theme switching
+// Track materials for theme switching (wire skin + shared)
 const themeMaterials = [];
 
 function lineMat(color = 0x0a0a0a, opacity = 1) {
@@ -1569,59 +1686,204 @@ function pointMat(color = 0x0a0a0a, opacity = 1) {
   return mat;
 }
 
-// 1. Icosahedron wireframe
-const icoGeo = new THREE.IcosahedronGeometry(SPHERE_RADIUS, 2);
-const icoEdges = new THREE.EdgesGeometry(icoGeo);
-const icoLines = new THREE.LineSegments(icoEdges, lineMat(0x0a0a0a, 0.08));
-sphereGroup.add(icoLines);
+// ============================================================
+// SPHERE SKINS — Wire (default), Lattice, Nested, Nebula, Aurora, Circuit, Cluster
+// Question dots live in dotsGroup (sibling), never affected by skins.
+// ============================================================
+let currentSphereSkin = 'wire';
+const SKIN_KEY = 'qs-sphere-skin';
+const ALL_SKINS = ['wire', 'lattice', 'nested', 'nebula', 'aurora', 'circuit', 'cluster'];
+const skinGroups = { wire: null, lattice: null, nested: null, nebula: null, aurora: null, circuit: null, cluster: null };
+const skinBuilt = { wire: false, lattice: false, nested: false, nebula: false, aurora: false, circuit: false, cluster: false };
+const skinOpacity = { wire: 1, lattice: 0, nested: 0, nebula: 0, aurora: 0, circuit: 0, cluster: 0 };
+let skinFade = null; // { from, to, start, duration }
 
-// 2. Great circles
-function makeGreatCircle(radius, segments = 180, opacity = 0.55) {
+function fibonacciSphere(n, radius) {
   const pts = [];
-  for (let i = 0; i <= segments; i++) {
-    const t = (i / segments) * Math.PI * 2;
-    pts.push(new THREE.Vector3(Math.cos(t) * radius, Math.sin(t) * radius, 0));
+  const golden = Math.PI * (3 - Math.sqrt(5));
+  for (let i = 0; i < n; i++) {
+    const y = 1 - (i / (n - 1)) * 2;
+    const r = Math.sqrt(1 - y * y);
+    const theta = golden * i;
+    pts.push(new THREE.Vector3(
+      Math.cos(theta) * r * radius,
+      y * radius,
+      Math.sin(theta) * r * radius
+    ));
   }
-  const geo = new THREE.BufferGeometry().setFromPoints(pts);
-  return new THREE.LineLoop(geo, lineMat(0x0a0a0a, opacity));
+  return pts;
 }
 
-sphereGroup.add(makeGreatCircle(SPHERE_RADIUS, 220, 0.55));
-const m1 = makeGreatCircle(SPHERE_RADIUS, 220, 0.3);
-m1.rotation.y = Math.PI / 2;
-sphereGroup.add(m1);
-const m2 = makeGreatCircle(SPHERE_RADIUS, 220, 0.22);
-m2.rotation.z = Math.PI / 3; m2.rotation.x = Math.PI / 5;
-sphereGroup.add(m2);
-const m3 = makeGreatCircle(SPHERE_RADIUS, 220, 0.18);
-m3.rotation.z = -Math.PI / 4; m3.rotation.y = Math.PI / 3;
-sphereGroup.add(m3);
-
-// 3. Parallels
-function makeParallel(radius, y, opacity = 0.2) {
-  const r = Math.sqrt(Math.max(0, radius * radius - y * y));
-  if (r < 0.01) return null;
-  const pts = [];
-  const segs = 140;
-  for (let i = 0; i <= segs; i++) {
-    const t = (i / segs) * Math.PI * 2;
-    pts.push(new THREE.Vector3(Math.cos(t) * r, y, Math.sin(t) * r));
-  }
-  const geo = new THREE.BufferGeometry().setFromPoints(pts);
-  return new THREE.LineLoop(geo, lineMat(0x0a0a0a, opacity));
-}
-[-1.3, -0.7, 0, 0.7, 1.3].forEach((y, i) => {
-  const op = [0.14, 0.2, 0.28, 0.2, 0.14][i];
-  const p = makeParallel(SPHERE_RADIUS, y, op);
-  if (p) sphereGroup.add(p);
-});
-
-// 4. Dotted spiral
-function makeDottedSpiral() {
+function buildWireSkin() {
+  if (skinBuilt.wire) return skinGroups.wire;
   const group = new THREE.Group();
-  const dotGeo = new THREE.SphereGeometry(0.008, 6, 6);
-  const mat = pointMat(0x0a0a0a, 0.35);
-  const steps = 240;
+  group.name = 'skin-wire';
+
+  // 1. Icosahedron wireframe
+  const icoGeo = new THREE.IcosahedronGeometry(SPHERE_RADIUS, 2);
+  const icoEdges = new THREE.EdgesGeometry(icoGeo);
+  const icoLines = new THREE.LineSegments(icoEdges, lineMat(0x0a0a0a, 0.08));
+  group.add(icoLines);
+
+  // 2. Great circles
+  function makeGreatCircle(radius, segments = 180, opacity = 0.55) {
+    const pts = [];
+    for (let i = 0; i <= segments; i++) {
+      const t = (i / segments) * Math.PI * 2;
+      pts.push(new THREE.Vector3(Math.cos(t) * radius, Math.sin(t) * radius, 0));
+    }
+    const geo = new THREE.BufferGeometry().setFromPoints(pts);
+    return new THREE.LineLoop(geo, lineMat(0x0a0a0a, opacity));
+  }
+
+  group.add(makeGreatCircle(SPHERE_RADIUS, 220, 0.55));
+  const m1 = makeGreatCircle(SPHERE_RADIUS, 220, 0.3);
+  m1.rotation.y = Math.PI / 2;
+  group.add(m1);
+  const m2 = makeGreatCircle(SPHERE_RADIUS, 220, 0.22);
+  m2.rotation.z = Math.PI / 3; m2.rotation.x = Math.PI / 5;
+  group.add(m2);
+  const m3 = makeGreatCircle(SPHERE_RADIUS, 220, 0.18);
+  m3.rotation.z = -Math.PI / 4; m3.rotation.y = Math.PI / 3;
+  group.add(m3);
+
+  // 3. Parallels
+  function makeParallel(radius, y, opacity = 0.2) {
+    const r = Math.sqrt(Math.max(0, radius * radius - y * y));
+    if (r < 0.01) return null;
+    const pts = [];
+    const segs = 140;
+    for (let i = 0; i <= segs; i++) {
+      const t = (i / segs) * Math.PI * 2;
+      pts.push(new THREE.Vector3(Math.cos(t) * r, y, Math.sin(t) * r));
+    }
+    const geo = new THREE.BufferGeometry().setFromPoints(pts);
+    return new THREE.LineLoop(geo, lineMat(0x0a0a0a, opacity));
+  }
+  [-1.3, -0.7, 0, 0.7, 1.3].forEach((y, i) => {
+    const op = [0.14, 0.2, 0.28, 0.2, 0.14][i];
+    const p = makeParallel(SPHERE_RADIUS, y, op);
+    if (p) group.add(p);
+  });
+
+  // 4. Dotted spiral
+  function makeDottedSpiral() {
+    const g = new THREE.Group();
+    const dotGeo = new THREE.SphereGeometry(0.008, 6, 6);
+    const mat = pointMat(0x0a0a0a, 0.35);
+    const steps = 240;
+    const turns = 3.5;
+    for (let i = 0; i < steps; i++) {
+      const t = i / steps;
+      const theta = t * Math.PI * 2 * turns;
+      const phi = t * Math.PI;
+      const r = SPHERE_RADIUS;
+      const x = r * Math.sin(phi) * Math.cos(theta);
+      const y = r * Math.cos(phi);
+      const z = r * Math.sin(phi) * Math.sin(theta);
+      const dot = new THREE.Mesh(dotGeo, mat);
+      dot.position.set(x, y, z);
+      g.add(dot);
+    }
+    return g;
+  }
+  group.add(makeDottedSpiral());
+
+  // 5. Ambient dots
+  function makeAmbientDots(count = 70) {
+    const g = new THREE.Group();
+    const dotGeo = new THREE.SphereGeometry(0.006, 5, 5);
+    const mat = pointMat(0x0a0a0a, 0.25);
+    for (let i = 0; i < count; i++) {
+      const u = Math.random();
+      const v = Math.random();
+      const theta = 2 * Math.PI * u;
+      const phi = Math.acos(2 * v - 1);
+      const x = SPHERE_RADIUS * Math.sin(phi) * Math.cos(theta);
+      const y = SPHERE_RADIUS * Math.cos(phi);
+      const z = SPHERE_RADIUS * Math.sin(phi) * Math.sin(theta);
+      const dot = new THREE.Mesh(dotGeo, mat);
+      dot.position.set(x, y, z);
+      g.add(dot);
+    }
+    return g;
+  }
+  group.add(makeAmbientDots(70));
+
+  skinGroups.wire = group;
+  skinBuilt.wire = true;
+  sphereGroup.add(group);
+  return group;
+}
+
+function buildNebulaSkin() {
+  if (skinBuilt.nebula) return skinGroups.nebula;
+  const group = new THREE.Group();
+  group.name = 'skin-nebula';
+  group.visible = false;
+
+  // Fibonacci particle cloud ~4000
+  const N = 4000;
+  const positions = new Float32Array(N * 3);
+  const colors = new Float32Array(N * 3);
+  const pts = fibonacciSphere(N, SPHERE_RADIUS);
+  const palette = [
+    new THREE.Color(0x1a2a6c), // deep blue
+    new THREE.Color(0x2d1b4e), // purple
+    new THREE.Color(0x4a1942), // soft magenta
+    new THREE.Color(0xc9a86c), // faint gold
+    new THREE.Color(0x3d5a80), // soft blue
+    new THREE.Color(0x6b4c7a)  // dusty purple
+  ];
+  for (let i = 0; i < N; i++) {
+    positions[i * 3] = pts[i].x;
+    positions[i * 3 + 1] = pts[i].y;
+    positions[i * 3 + 2] = pts[i].z;
+    const c = palette[i % palette.length].clone();
+    // slight random variation
+    c.offsetHSL((Math.random() - 0.5) * 0.05, (Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.08);
+    colors[i * 3] = c.r;
+    colors[i * 3 + 1] = c.g;
+    colors[i * 3 + 2] = c.b;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  const mat = new THREE.PointsMaterial({
+    size: 0.028,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.85,
+    sizeAttenuation: true,
+    depthWrite: false
+  });
+  const points = new THREE.Points(geo, mat);
+  points.userData.isNebulaPoints = true;
+  points.userData.baseColors = colors.slice();
+  group.add(points);
+
+  // Soft concentric shells (bloom-like)
+  const shellHues = [0.65, 0.78, 0.08]; // blue, purple, gold-ish
+  const shellRadii = [1.02, 1.05, 1.1];
+  const shellSpeeds = [0.08, -0.05, 0.03];
+  for (let s = 0; s < 3; s++) {
+    const shellGeo = new THREE.SphereGeometry(SPHERE_RADIUS * shellRadii[s], 32, 24);
+    const shellMat = new THREE.MeshBasicMaterial({
+      color: new THREE.Color().setHSL(shellHues[s], 0.45, 0.45),
+      transparent: true,
+      opacity: 0.04,
+      side: THREE.BackSide,
+      depthWrite: false
+    });
+    const shell = new THREE.Mesh(shellGeo, shellMat);
+    shell.userData.shellSpeed = shellSpeeds[s];
+    group.add(shell);
+  }
+
+  // Colored spiral (swirl of colored dots)
+  const spiralGroup = new THREE.Group();
+  const dotGeo = new THREE.SphereGeometry(0.007, 5, 5);
+  const steps = 180;
   const turns = 3.5;
   for (let i = 0; i < steps; i++) {
     const t = i / steps;
@@ -1631,36 +1893,576 @@ function makeDottedSpiral() {
     const x = r * Math.sin(phi) * Math.cos(theta);
     const y = r * Math.cos(phi);
     const z = r * Math.sin(phi) * Math.sin(theta);
-    const dot = new THREE.Mesh(dotGeo, mat);
+    const c = palette[i % palette.length].clone();
+    const dmat = new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.5 });
+    const dot = new THREE.Mesh(dotGeo, dmat);
     dot.position.set(x, y, z);
-    group.add(dot);
+    spiralGroup.add(dot);
   }
-  return group;
-}
-sphereGroup.add(makeDottedSpiral());
+  group.add(spiralGroup);
 
-// 5. Ambient dots
-function makeAmbientDots(count = 70) {
-  const group = new THREE.Group();
-  const dotGeo = new THREE.SphereGeometry(0.006, 5, 5);
-  const mat = pointMat(0x0a0a0a, 0.25);
-  for (let i = 0; i < count; i++) {
+  // Ambient dots stay (lower visual weight via shell)
+  const ambGeo = new THREE.SphereGeometry(0.005, 4, 4);
+  const ambMat = new THREE.MeshBasicMaterial({ color: 0x8899cc, transparent: true, opacity: 0.18 });
+  for (let i = 0; i < 50; i++) {
     const u = Math.random();
     const v = Math.random();
     const theta = 2 * Math.PI * u;
     const phi = Math.acos(2 * v - 1);
+    const dot = new THREE.Mesh(ambGeo, ambMat);
+    dot.position.set(
+      SPHERE_RADIUS * Math.sin(phi) * Math.cos(theta),
+      SPHERE_RADIUS * Math.cos(phi),
+      SPHERE_RADIUS * Math.sin(phi) * Math.sin(theta)
+    );
+    group.add(dot);
+  }
+
+  group.userData.nebulaPoints = points;
+  group.userData.shells = group.children.filter(c => c.userData.shellSpeed !== undefined);
+
+  skinGroups.nebula = group;
+  skinBuilt.nebula = true;
+  sphereGroup.add(group);
+  return group;
+}
+
+function buildCircuitSkin() {
+  if (skinBuilt.circuit) return skinGroups.circuit;
+  const group = new THREE.Group();
+  group.name = 'skin-circuit';
+  group.visible = false;
+
+  const NODE_COUNT = 120;
+  const nodes = fibonacciSphere(NODE_COUNT, SPHERE_RADIUS);
+
+  // Nodes
+  const nodeGeo = new THREE.SphereGeometry(0.018, 8, 8);
+  const nodeMat = lineMat(0x0a0a0a, 0.9); // will be theme-colored via themeMaterials
+  // Reuse pointMat style but keep reference
+  const nodeMeshes = [];
+  for (let i = 0; i < NODE_COUNT; i++) {
+    const mat = new THREE.MeshBasicMaterial({ color: 0x0a0a0a, transparent: true, opacity: 0.9 });
+    themeMaterials.push({ mat, type: 'point', baseOpacity: 0.9 });
+    const mesh = new THREE.Mesh(nodeGeo, mat);
+    mesh.position.copy(nodes[i]);
+    group.add(mesh);
+    nodeMeshes.push(mesh);
+  }
+
+  // Connect each node to 3 nearest neighbors — one LineSegments
+  const linePositions = [];
+  const used = new Set();
+  for (let i = 0; i < NODE_COUNT; i++) {
+    const dists = [];
+    for (let j = 0; j < NODE_COUNT; j++) {
+      if (i === j) continue;
+      dists.push({ j, d: nodes[i].distanceTo(nodes[j]) });
+    }
+    dists.sort((a, b) => a.d - b.d);
+    for (let k = 0; k < 3; k++) {
+      const j = dists[k].j;
+      const key = i < j ? `${i}-${j}` : `${j}-${i}`;
+      if (used.has(key)) continue;
+      used.add(key);
+      linePositions.push(nodes[i].x, nodes[i].y, nodes[i].z);
+      linePositions.push(nodes[j].x, nodes[j].y, nodes[j].z);
+    }
+  }
+  const lineGeo = new THREE.BufferGeometry();
+  lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+  const lineMatCirc = new THREE.LineBasicMaterial({ color: 0x0a0a0a, transparent: true, opacity: 0.25 });
+  themeMaterials.push({ mat: lineMatCirc, type: 'line', baseOpacity: 0.25 });
+  group.add(new THREE.LineSegments(lineGeo, lineMatCirc));
+
+  // Great circles with dashed look
+  function makeDashedCircle(radius, segments = 120, opacity = 0.4) {
+    const pts = [];
+    for (let i = 0; i <= segments; i++) {
+      const t = (i / segments) * Math.PI * 2;
+      pts.push(new THREE.Vector3(Math.cos(t) * radius, Math.sin(t) * radius, 0));
+    }
+    const geo = new THREE.BufferGeometry().setFromPoints(pts);
+    const mat = new THREE.LineDashedMaterial({
+      color: 0x0a0a0a,
+      transparent: true,
+      opacity,
+      dashSize: 0.12,
+      gapSize: 0.08
+    });
+    themeMaterials.push({ mat, type: 'line', baseOpacity: opacity });
+    const line = new THREE.Line(geo, mat);
+    line.computeLineDistances();
+    return line;
+  }
+  group.add(makeDashedCircle(SPHERE_RADIUS, 160, 0.45));
+  const dm1 = makeDashedCircle(SPHERE_RADIUS, 160, 0.28);
+  dm1.rotation.y = Math.PI / 2;
+  group.add(dm1);
+  const dm2 = makeDashedCircle(SPHERE_RADIUS, 160, 0.2);
+  dm2.rotation.z = Math.PI / 3; dm2.rotation.x = Math.PI / 5;
+  group.add(dm2);
+
+  // No dotted spiral (nodes replace it)
+  // Ambient dots light
+  const ambGeo = new THREE.SphereGeometry(0.004, 4, 4);
+  const ambMat = new THREE.MeshBasicMaterial({ color: 0x0a0a0a, transparent: true, opacity: 0.15 });
+  themeMaterials.push({ mat: ambMat, type: 'point', baseOpacity: 0.15 });
+  for (let i = 0; i < 40; i++) {
+    const u = Math.random();
+    const v = Math.random();
+    const theta = 2 * Math.PI * u;
+    const phi = Math.acos(2 * v - 1);
+    const dot = new THREE.Mesh(ambGeo, ambMat);
+    dot.position.set(
+      SPHERE_RADIUS * Math.sin(phi) * Math.cos(theta),
+      SPHERE_RADIUS * Math.cos(phi),
+      SPHERE_RADIUS * Math.sin(phi) * Math.sin(theta)
+    );
+    group.add(dot);
+  }
+
+  skinGroups.circuit = group;
+  skinBuilt.circuit = true;
+  sphereGroup.add(group);
+  return group;
+}
+
+// ---------- Lattice: deeper, richer Wire (extra layers, same language) ----------
+function buildLatticeSkin() {
+  if (skinBuilt.lattice) return skinGroups.lattice;
+  const group = new THREE.Group();
+  group.name = 'skin-lattice';
+  group.visible = false;
+
+  // Outer fine icosahedron
+  const icoGeo = new THREE.IcosahedronGeometry(SPHERE_RADIUS, 3);
+  const icoEdges = new THREE.EdgesGeometry(icoGeo);
+  group.add(new THREE.LineSegments(icoEdges, lineMat(0x0a0a0a, 0.06)));
+
+  // Mid icosahedron (offset rotation for depth)
+  const icoMid = new THREE.IcosahedronGeometry(SPHERE_RADIUS * 0.92, 2);
+  const midLines = new THREE.LineSegments(new THREE.EdgesGeometry(icoMid), lineMat(0x0a0a0a, 0.1));
+  midLines.rotation.y = 0.35;
+  group.add(midLines);
+
+  // Inner delicate shell
+  const icoIn = new THREE.IcosahedronGeometry(SPHERE_RADIUS * 0.78, 1);
+  group.add(new THREE.LineSegments(new THREE.EdgesGeometry(icoIn), lineMat(0x0a0a0a, 0.14)));
+
+  // Extra great circles (more meridians)
+  function makeGC(opacity, rotY = 0, rotX = 0, rotZ = 0) {
+    const pts = [];
+    for (let i = 0; i <= 200; i++) {
+      const t = (i / 200) * Math.PI * 2;
+      pts.push(new THREE.Vector3(Math.cos(t) * SPHERE_RADIUS, Math.sin(t) * SPHERE_RADIUS, 0));
+    }
+    const line = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), lineMat(0x0a0a0a, opacity));
+    line.rotation.set(rotX, rotY, rotZ);
+    return line;
+  }
+  group.add(makeGC(0.5));
+  group.add(makeGC(0.28, Math.PI / 2));
+  group.add(makeGC(0.2, Math.PI / 3, Math.PI / 5));
+  group.add(makeGC(0.16, -Math.PI / 4, 0, Math.PI / 3));
+  group.add(makeGC(0.12, Math.PI / 5, Math.PI / 7, -Math.PI / 6));
+
+  // More parallels for depth
+  [-1.5, -1.1, -0.6, -0.2, 0.2, 0.6, 1.1, 1.5].forEach((y, i) => {
+    const r = Math.sqrt(Math.max(0, SPHERE_RADIUS * SPHERE_RADIUS - y * y));
+    if (r < 0.02) return;
+    const pts = [];
+    for (let j = 0; j <= 160; j++) {
+      const t = (j / 160) * Math.PI * 2;
+      pts.push(new THREE.Vector3(Math.cos(t) * r, y, Math.sin(t) * r));
+    }
+    const op = 0.1 + (i % 3) * 0.04;
+    group.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), lineMat(0x0a0a0a, op)));
+  });
+
+  // Fine dotted spiral (denser)
+  const spiral = new THREE.Group();
+  const dotGeo = new THREE.SphereGeometry(0.006, 5, 5);
+  const mat = pointMat(0x0a0a0a, 0.32);
+  for (let i = 0; i < 320; i++) {
+    const t = i / 320;
+    const theta = t * Math.PI * 2 * 4.2;
+    const phi = t * Math.PI;
     const x = SPHERE_RADIUS * Math.sin(phi) * Math.cos(theta);
     const y = SPHERE_RADIUS * Math.cos(phi);
     const z = SPHERE_RADIUS * Math.sin(phi) * Math.sin(theta);
     const dot = new THREE.Mesh(dotGeo, mat);
     dot.position.set(x, y, z);
+    spiral.add(dot);
+  }
+  group.add(spiral);
+
+  // Ambient dust
+  const ambGeo = new THREE.SphereGeometry(0.005, 4, 4);
+  const ambMat = pointMat(0x0a0a0a, 0.2);
+  for (let i = 0; i < 90; i++) {
+    const u = Math.random(), v = Math.random();
+    const theta = 2 * Math.PI * u;
+    const phi = Math.acos(2 * v - 1);
+    const dot = new THREE.Mesh(ambGeo, ambMat);
+    dot.position.set(
+      SPHERE_RADIUS * Math.sin(phi) * Math.cos(theta),
+      SPHERE_RADIUS * Math.cos(phi),
+      SPHERE_RADIUS * Math.sin(phi) * Math.sin(theta)
+    );
     group.add(dot);
   }
+
+  skinGroups.lattice = group;
+  skinBuilt.lattice = true;
+  sphereGroup.add(group);
   return group;
 }
-sphereGroup.add(makeAmbientDots(70));
 
-// ---------- Question points (pool-based) ----------
+// ---------- Nested: spheres within spheres — deep, elegant tunnel of wire ----------
+function buildNestedSkin() {
+  if (skinBuilt.nested) return skinGroups.nested;
+  const group = new THREE.Group();
+  group.name = 'skin-nested';
+  group.visible = false;
+
+  const radii = [1.0, 0.82, 0.66, 0.52, 0.40, 0.30, 0.22];
+  const opacities = [0.55, 0.42, 0.34, 0.28, 0.22, 0.18, 0.14];
+  const details = [2, 2, 1, 1, 1, 0, 0];
+
+  radii.forEach((scale, idx) => {
+    const r = SPHERE_RADIUS * scale;
+    const ico = new THREE.IcosahedronGeometry(r, details[idx]);
+    const edges = new THREE.EdgesGeometry(ico);
+    const lines = new THREE.LineSegments(edges, lineMat(0x0a0a0a, opacities[idx] * 0.35));
+    // slight rotation offset per shell for depth
+    lines.rotation.y = idx * 0.22;
+    lines.rotation.x = idx * 0.08;
+    group.add(lines);
+
+    // Equator ring on each shell
+    const pts = [];
+    for (let i = 0; i <= 140; i++) {
+      const t = (i / 140) * Math.PI * 2;
+      pts.push(new THREE.Vector3(Math.cos(t) * r, 0, Math.sin(t) * r));
+    }
+    const ring = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), lineMat(0x0a0a0a, opacities[idx] * 0.7));
+    ring.rotation.x = idx * 0.15;
+    group.add(ring);
+  });
+
+  // Soft connecting radial lines (a few meridians through all shells)
+  for (let m = 0; m < 6; m++) {
+    const angle = (m / 6) * Math.PI * 2;
+    const pts = [];
+    for (const scale of radii) {
+      const r = SPHERE_RADIUS * scale;
+      pts.push(new THREE.Vector3(Math.cos(angle) * r, 0, Math.sin(angle) * r));
+    }
+    group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lineMat(0x0a0a0a, 0.12)));
+  }
+
+  // Tiny core glow point
+  const core = new THREE.Mesh(
+    new THREE.SphereGeometry(0.04, 12, 12),
+    pointMat(0x0a0a0a, 0.5)
+  );
+  group.add(core);
+
+  // Sparse ambient on outermost
+  const ambGeo = new THREE.SphereGeometry(0.005, 4, 4);
+  const ambMat = pointMat(0x0a0a0a, 0.18);
+  for (let i = 0; i < 40; i++) {
+    const u = Math.random(), v = Math.random();
+    const theta = 2 * Math.PI * u;
+    const phi = Math.acos(2 * v - 1);
+    const dot = new THREE.Mesh(ambGeo, ambMat);
+    dot.position.set(
+      SPHERE_RADIUS * Math.sin(phi) * Math.cos(theta),
+      SPHERE_RADIUS * Math.cos(phi),
+      SPHERE_RADIUS * Math.sin(phi) * Math.sin(theta)
+    );
+    group.add(dot);
+  }
+
+  group.userData.nestedCore = core;
+  skinGroups.nested = group;
+  skinBuilt.nested = true;
+  sphereGroup.add(group);
+  return group;
+}
+
+// ---------- Aurora: second nebula — softer greens, teals, rose, flowing ----------
+function buildAuroraSkin() {
+  if (skinBuilt.aurora) return skinGroups.aurora;
+  const group = new THREE.Group();
+  group.name = 'skin-aurora';
+  group.visible = false;
+
+  const N = 3500;
+  const positions = new Float32Array(N * 3);
+  const colors = new Float32Array(N * 3);
+  const pts = fibonacciSphere(N, SPHERE_RADIUS);
+  const palette = [
+    new THREE.Color(0x0d3b4a), // deep teal
+    new THREE.Color(0x1a5c4a), // forest
+    new THREE.Color(0x2e8b7a), // seafoam
+    new THREE.Color(0xc47a6a), // dusty rose
+    new THREE.Color(0x8bb8a8), // soft mint
+    new THREE.Color(0x4a6fa5), // quiet blue
+    new THREE.Color(0xd4a574)  // warm sand
+  ];
+  for (let i = 0; i < N; i++) {
+    positions[i * 3] = pts[i].x;
+    positions[i * 3 + 1] = pts[i].y;
+    positions[i * 3 + 2] = pts[i].z;
+    const c = palette[i % palette.length].clone();
+    c.offsetHSL((Math.random() - 0.5) * 0.06, (Math.random() - 0.5) * 0.12, (Math.random() - 0.5) * 0.1);
+    colors[i * 3] = c.r;
+    colors[i * 3 + 1] = c.g;
+    colors[i * 3 + 2] = c.b;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  const mat = new THREE.PointsMaterial({
+    size: 0.032,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.8,
+    sizeAttenuation: true,
+    depthWrite: false
+  });
+  const points = new THREE.Points(geo, mat);
+  points.userData.isAuroraPoints = true;
+  points.userData.baseColors = colors.slice();
+  group.add(points);
+
+  // Soft flowing shells
+  const shellData = [
+    { r: 1.03, h: 0.48, s: 0.35, l: 0.42, speed: 0.06 },
+    { r: 1.07, h: 0.55, s: 0.3, l: 0.48, speed: -0.04 },
+    { r: 1.12, h: 0.08, s: 0.25, l: 0.55, speed: 0.025 }
+  ];
+  for (const s of shellData) {
+    const shellGeo = new THREE.SphereGeometry(SPHERE_RADIUS * s.r, 28, 20);
+    const shellMat = new THREE.MeshBasicMaterial({
+      color: new THREE.Color().setHSL(s.h, s.s, s.l),
+      transparent: true,
+      opacity: 0.035,
+      side: THREE.BackSide,
+      depthWrite: false
+    });
+    const shell = new THREE.Mesh(shellGeo, shellMat);
+    shell.userData.shellSpeed = s.speed;
+    group.add(shell);
+  }
+
+  // Soft spiral of aurora dots
+  const spiral = new THREE.Group();
+  const dGeo = new THREE.SphereGeometry(0.008, 5, 5);
+  for (let i = 0; i < 160; i++) {
+    const t = i / 160;
+    const theta = t * Math.PI * 2 * 3.2;
+    const phi = t * Math.PI;
+    const c = palette[i % palette.length].clone();
+    const dmat = new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.45 });
+    const dot = new THREE.Mesh(dGeo, dmat);
+    dot.position.set(
+      SPHERE_RADIUS * Math.sin(phi) * Math.cos(theta),
+      SPHERE_RADIUS * Math.cos(phi),
+      SPHERE_RADIUS * Math.sin(phi) * Math.sin(theta)
+    );
+    spiral.add(dot);
+  }
+  group.add(spiral);
+
+  group.userData.auroraPoints = points;
+  group.userData.shells = group.children.filter(c => c.userData.shellSpeed !== undefined);
+
+  skinGroups.aurora = group;
+  skinBuilt.aurora = true;
+  sphereGroup.add(group);
+  return group;
+}
+
+// ---------- Cluster: multiple elegant spheres on one screen ----------
+function buildClusterSkin() {
+  if (skinBuilt.cluster) return skinGroups.cluster;
+  const group = new THREE.Group();
+  group.name = 'skin-cluster';
+  group.visible = false;
+
+  // Central main sphere (lighter wire)
+  const mainIco = new THREE.IcosahedronGeometry(SPHERE_RADIUS * 0.55, 2);
+  group.add(new THREE.LineSegments(new THREE.EdgesGeometry(mainIco), lineMat(0x0a0a0a, 0.2)));
+  // equator on main
+  const eqPts = [];
+  for (let i = 0; i <= 100; i++) {
+    const t = (i / 100) * Math.PI * 2;
+    const r = SPHERE_RADIUS * 0.55;
+    eqPts.push(new THREE.Vector3(Math.cos(t) * r, 0, Math.sin(t) * r));
+  }
+  group.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(eqPts), lineMat(0x0a0a0a, 0.4)));
+
+  // Orbiting companion spheres
+  const companions = [
+    { scale: 0.32, dist: 1.55, speed: 0.12, phase: 0 },
+    { scale: 0.22, dist: 1.85, speed: -0.08, phase: 2.1 },
+    { scale: 0.18, dist: 2.15, speed: 0.06, phase: 4.0 },
+    { scale: 0.14, dist: 1.35, speed: 0.15, phase: 1.2 },
+    { scale: 0.12, dist: 2.4, speed: -0.05, phase: 5.5 }
+  ];
+
+  const companionMeshes = [];
+  companions.forEach((c, idx) => {
+    const sub = new THREE.Group();
+    const ico = new THREE.IcosahedronGeometry(SPHERE_RADIUS * c.scale, 1);
+    sub.add(new THREE.LineSegments(new THREE.EdgesGeometry(ico), lineMat(0x0a0a0a, 0.25)));
+    // small equator
+    const pts = [];
+    const rr = SPHERE_RADIUS * c.scale;
+    for (let i = 0; i <= 60; i++) {
+      const t = (i / 60) * Math.PI * 2;
+      pts.push(new THREE.Vector3(Math.cos(t) * rr, 0, Math.sin(t) * rr));
+    }
+    sub.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts), lineMat(0x0a0a0a, 0.35)));
+    // a few ambient dots on each
+    const dGeo = new THREE.SphereGeometry(0.008, 4, 4);
+    const dMat = pointMat(0x0a0a0a, 0.35);
+    for (let i = 0; i < 8; i++) {
+      const u = Math.random(), v = Math.random();
+      const theta = 2 * Math.PI * u;
+      const phi = Math.acos(2 * v - 1);
+      const dot = new THREE.Mesh(dGeo, dMat);
+      dot.position.set(rr * Math.sin(phi) * Math.cos(theta), rr * Math.cos(phi), rr * Math.sin(phi) * Math.sin(theta));
+      sub.add(dot);
+    }
+    sub.userData.orbit = { dist: c.dist, speed: c.speed, phase: c.phase, yOff: (idx % 3 - 1) * 0.35 };
+    group.add(sub);
+    companionMeshes.push(sub);
+  });
+
+  // Soft linking arcs (faint)
+  for (let i = 0; i < 4; i++) {
+    const a = (i / 4) * Math.PI * 2;
+    const pts = [];
+    for (let j = 0; j <= 40; j++) {
+      const t = j / 40;
+      const r = 0.6 + t * 1.4;
+      pts.push(new THREE.Vector3(Math.cos(a) * r, Math.sin(t * Math.PI) * 0.3, Math.sin(a) * r));
+    }
+    group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), lineMat(0x0a0a0a, 0.08)));
+  }
+
+  group.userData.companions = companionMeshes;
+  skinGroups.cluster = group;
+  skinBuilt.cluster = true;
+  sphereGroup.add(group);
+  return group;
+}
+
+function applySkinOpacity(name, mult) {
+  const g = skinGroups[name];
+  if (!g) return;
+  g.traverse((obj) => {
+    if (obj.material) {
+      const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+      for (const m of mats) {
+        if (m.transparent !== undefined) {
+          if (m.userData._baseOpacity === undefined) {
+            m.userData._baseOpacity = m.opacity;
+          }
+          m.opacity = m.userData._baseOpacity * mult;
+          m.visible = mult > 0.01;
+        }
+      }
+    }
+  });
+  g.visible = mult > 0.01;
+}
+
+function switchSphereSkin(name) {
+  if (!ALL_SKINS.includes(name)) return;
+  if (name === currentSphereSkin && !skinFade) return;
+
+  // Lazy build
+  if (name === 'wire') buildWireSkin();
+  else if (name === 'lattice') buildLatticeSkin();
+  else if (name === 'nested') buildNestedSkin();
+  else if (name === 'nebula') buildNebulaSkin();
+  else if (name === 'aurora') buildAuroraSkin();
+  else if (name === 'circuit') buildCircuitSkin();
+  else if (name === 'cluster') buildClusterSkin();
+
+  const from = currentSphereSkin;
+  currentSphereSkin = name;
+
+  // Ensure target starts at 0 if newly built
+  if (skinOpacity[name] === 0) applySkinOpacity(name, 0);
+
+  skinFade = {
+    from,
+    to: name,
+    start: performance.now(),
+    duration: 650
+  };
+
+  try { localStorage.setItem(SKIN_KEY, name); } catch (e) {}
+
+  document.querySelectorAll('.sp-skin-option').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.skinValue === name);
+  });
+}
+
+function updateSkinFade() {
+  if (!skinFade) return;
+  const t = Math.min(1, (performance.now() - skinFade.start) / skinFade.duration);
+  const e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; // ease
+
+  skinOpacity[skinFade.from] = 1 - e;
+  skinOpacity[skinFade.to] = e;
+  applySkinOpacity(skinFade.from, 1 - e);
+  applySkinOpacity(skinFade.to, e);
+
+  if (t >= 1) {
+    skinOpacity[skinFade.from] = 0;
+    skinOpacity[skinFade.to] = 1;
+    applySkinOpacity(skinFade.from, 0);
+    applySkinOpacity(skinFade.to, 1);
+    skinFade = null;
+  }
+}
+
+// Build default wire immediately
+buildWireSkin();
+skinOpacity.wire = 1;
+
+// Restore saved skin
+(function initSkin() {
+  let saved = 'wire';
+  try { saved = localStorage.getItem(SKIN_KEY) || 'wire'; } catch (e) {}
+  if (!ALL_SKINS.includes(saved)) saved = 'wire';
+  if (saved !== 'wire') {
+    switchSphereSkin(saved);
+  } else {
+    document.querySelectorAll('.sp-skin-option').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.skinValue === 'wire');
+    });
+  }
+})();
+
+// Skin button handlers (after DOM ready — already in module)
+document.querySelectorAll('.sp-skin-option').forEach(btn => {
+  btn.addEventListener('click', () => {
+    switchSphereSkin(btn.dataset.skinValue);
+  });
+});
+
+// ---------- Question points (pool-based) — dotsGroup is sibling of skins ----------
+const dotsGroup = new THREE.Group();
+dotsGroup.name = 'dotsGroup';
+sphereGroup.add(dotsGroup);
 // Pre-create a pool of point meshes; assign questions to them
 const pointPool = []; // { group, halo, core, questionId, assignedIndex }
 const POOL_SIZE = VISIBLE_POOL_SIZE + 4;
@@ -1678,7 +2480,7 @@ function createPoolPoint() {
   group.add(halo);
   group.add(core);
   group.visible = false;
-  sphereGroup.add(group);
+  dotsGroup.add(group);
 
   return {
     group, halo, core,
@@ -1998,16 +2800,87 @@ const leaveModal = document.getElementById('leave');
 const leaveInput = document.getElementById('leave-input');
 const leaveCancel = document.getElementById('leave-cancel');
 const leaveSubmit = document.getElementById('leave-submit');
+const leaveTopicRow = document.getElementById('leave-topic-row');
 const btnLeave = document.getElementById('btn-leave');
+
+// Fallback categories if backend /api/topics is empty or slow
+const FALLBACK_TOPICS = [
+  { slug: 'love', name: 'Love' },
+  { slug: 'life', name: 'Life' },
+  { slug: 'philosophy', name: 'Philosophy' },
+  { slug: 'science', name: 'Science' },
+  { slug: 'technology', name: 'Technology' },
+  { slug: 'art', name: 'Art' },
+  { slug: 'society', name: 'Society' },
+  { slug: 'self', name: 'Self' },
+  { slug: 'nature', name: 'Nature' },
+  { slug: 'mystery', name: 'Mystery' }
+];
+
+let leaveTopicSlug = null; // category chosen when leaving a question
+let leaveTopicsCache = null;
+
+function renderLeaveTopics(topics) {
+  if (!leaveTopicRow) return;
+  leaveTopicRow.innerHTML = '';
+  const list = (topics && topics.length) ? topics : FALLBACK_TOPICS;
+  leaveTopicsCache = list;
+
+  // Optional "none" so category is not required
+  const nonePill = document.createElement('button');
+  nonePill.type = 'button';
+  nonePill.className = 'leave-topic-pill' + (leaveTopicSlug === null ? ' active' : '');
+  nonePill.textContent = 'Any';
+  nonePill.addEventListener('click', () => {
+    leaveTopicSlug = null;
+    leaveTopicRow.querySelectorAll('.leave-topic-pill').forEach(p => p.classList.remove('active'));
+    nonePill.classList.add('active');
+  });
+  leaveTopicRow.appendChild(nonePill);
+
+  for (const topic of list) {
+    const pill = document.createElement('button');
+    pill.type = 'button';
+    pill.className = 'leave-topic-pill' + (leaveTopicSlug === topic.slug ? ' active' : '');
+    pill.textContent = topic.name;
+    pill.dataset.slug = topic.slug;
+    pill.addEventListener('click', () => {
+      leaveTopicSlug = topic.slug;
+      leaveTopicRow.querySelectorAll('.leave-topic-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+    });
+    leaveTopicRow.appendChild(pill);
+  }
+}
+
+async function ensureLeaveTopics() {
+  if (leaveTopicsCache) {
+    renderLeaveTopics(leaveTopicsCache);
+    return;
+  }
+  const topics = await fetchTopics();
+  renderLeaveTopics(topics && topics.length ? topics : FALLBACK_TOPICS);
+}
 
 btnLeave.addEventListener('click', () => {
   leaveModal.classList.add('open');
+  leaveTopicSlug = currentTopicSlug; // pre-select active filter if any
+  ensureLeaveTopics().then(() => {
+    // re-apply active state after render
+    if (leaveTopicRow) {
+      leaveTopicRow.querySelectorAll('.leave-topic-pill').forEach(p => {
+        const slug = p.dataset.slug || null;
+        p.classList.toggle('active', slug === leaveTopicSlug || (slug == null && leaveTopicSlug == null && p.textContent === 'Any'));
+      });
+    }
+  });
   setTimeout(() => leaveInput.focus(), 100);
 });
 
 leaveCancel.addEventListener('click', () => {
   leaveModal.classList.remove('open');
   leaveInput.value = '';
+  leaveTopicSlug = null;
 });
 
 leaveSubmit.addEventListener('click', submitLeave);
@@ -2023,10 +2896,11 @@ async function submitLeave() {
   let row;
   try {
     const body = { text };
-    if (currentTopicSlug) {
-      // Backend accepts topic_id; we send topic slug via questions? filter only.
-      // Creation uses text; optional topic_id if we resolve it later.
-      body.topic_slug = currentTopicSlug;
+    // Prefer the category the user just picked in the leave modal;
+    // fall back to the settings-panel topic filter if they left it as Any.
+    const slug = leaveTopicSlug || currentTopicSlug;
+    if (slug) {
+      body.topic_slug = slug;
     }
     const result = await apiRequest('/api/questions', {
       method: 'POST',
@@ -2066,6 +2940,7 @@ async function submitLeave() {
 
   leaveModal.classList.remove('open');
   leaveInput.value = '';
+  leaveTopicSlug = null;
 
   showToast("something new, somewhere in the sphere.");
 }
@@ -2148,6 +3023,82 @@ function animate() {
     }
   }
 
+  // Skin fade transition
+  updateSkinFade();
+
+  // Nebula skin: slow color drift + shell rotation
+  if (skinGroups.nebula && skinGroups.nebula.visible) {
+    const np = skinGroups.nebula.userData.nebulaPoints;
+    if (np && np.geometry) {
+      const colAttr = np.geometry.attributes.color;
+      const base = np.userData.baseColors;
+      if (colAttr && base) {
+        for (let i = 0; i < colAttr.count; i++) {
+          const r = base[i * 3], g = base[i * 3 + 1], b = base[i * 3 + 2];
+          const c = new THREE.Color(r, g, b);
+          c.offsetHSL(Math.sin(t * 0.15 + i * 0.01) * 0.02, 0, Math.sin(t * 0.2 + i * 0.007) * 0.03);
+          colAttr.setXYZ(i, c.r, c.g, c.b);
+        }
+        colAttr.needsUpdate = true;
+      }
+    }
+    const shells = skinGroups.nebula.userData.shells || [];
+    for (const shell of shells) {
+      shell.rotation.y += shell.userData.shellSpeed * 0.016;
+      shell.rotation.x += shell.userData.shellSpeed * 0.008;
+    }
+  }
+
+  // Aurora skin: gentle drift + shells
+  if (skinGroups.aurora && skinGroups.aurora.visible) {
+    const ap = skinGroups.aurora.userData.auroraPoints;
+    if (ap && ap.geometry) {
+      const colAttr = ap.geometry.attributes.color;
+      const base = ap.userData.baseColors;
+      if (colAttr && base) {
+        for (let i = 0; i < colAttr.count; i++) {
+          const r = base[i * 3], g = base[i * 3 + 1], b = base[i * 3 + 2];
+          const c = new THREE.Color(r, g, b);
+          c.offsetHSL(Math.sin(t * 0.12 + i * 0.008) * 0.025, 0, Math.sin(t * 0.18 + i * 0.006) * 0.04);
+          colAttr.setXYZ(i, c.r, c.g, c.b);
+        }
+        colAttr.needsUpdate = true;
+      }
+    }
+    const shells = skinGroups.aurora.userData.shells || [];
+    for (const shell of shells) {
+      shell.rotation.y += shell.userData.shellSpeed * 0.016;
+      shell.rotation.z += shell.userData.shellSpeed * 0.006;
+    }
+  }
+
+  // Nested: soft core pulse + slow shell rotation
+  if (skinGroups.nested && skinGroups.nested.visible) {
+    const core = skinGroups.nested.userData.nestedCore;
+    if (core) {
+      const pulse = 1 + Math.sin(t * 1.4) * 0.18;
+      core.scale.setScalar(pulse);
+    }
+    skinGroups.nested.rotation.y = t * 0.04;
+  }
+
+  // Cluster: orbit companions
+  if (skinGroups.cluster && skinGroups.cluster.visible) {
+    const comps = skinGroups.cluster.userData.companions || [];
+    for (const sub of comps) {
+      const o = sub.userData.orbit;
+      if (!o) continue;
+      const ang = t * o.speed + o.phase;
+      sub.position.set(
+        Math.cos(ang) * o.dist,
+        o.yOff + Math.sin(t * 0.3 + o.phase) * 0.15,
+        Math.sin(ang) * o.dist
+      );
+      sub.rotation.y = t * 0.2;
+    }
+    skinGroups.cluster.rotation.y = t * 0.025;
+  }
+
   // Theme transition lerp
   updateThemeTransition();
 
@@ -2198,6 +3149,7 @@ function updateThemeTransition() {
 
   scene.background.copy(bg);
   renderer.setClearColor(bg, 1);
+  if (scene.fog) scene.fog.color.copy(bg);
 
   for (const entry of themeMaterials) {
     entry.mat.color.copy(sphere);
@@ -2257,9 +3209,23 @@ function applyTheme(theme, originX = window.innerWidth / 2, originY = window.inn
     // Instant
     scene.background.setHex(toColors.bg);
     renderer.setClearColor(toColors.bg, 1);
+    if (scene.fog) scene.fog.color.setHex(toColors.bg);
     for (const entry of themeMaterials) {
       entry.mat.color.setHex(toColors.sphere);
     }
+  }
+
+  // Nebula keeps its own palette; slight brightness shift for contrast
+  if (skinGroups.nebula) {
+    const brightness = theme === 'light' ? 0.9 : 1.1;
+    skinGroups.nebula.traverse((obj) => {
+      if (obj.isPoints && obj.userData.baseColors) {
+        // handled in animate via base
+      } else if (obj.material && obj.material.color && !obj.userData.isNebulaPoints) {
+        // shells already set
+      }
+    });
+    // Store for animate if needed; simple scale on material opacity already fine
   }
 
   currentTheme = theme;
@@ -2279,6 +3245,7 @@ function applyTheme(theme, originX = window.innerWidth / 2, originY = window.inn
   const c = THEME_COLORS[saved];
   scene.background.setHex(c.bg);
   renderer.setClearColor(c.bg, 1);
+  if (scene.fog) scene.fog.color.setHex(c.bg);
   for (const entry of themeMaterials) {
     entry.mat.color.setHex(c.sphere);
   }
@@ -2667,8 +3634,7 @@ const PAGE_TITLES = {
   faq: 'Questionable Sphere FAQ',
   guidelines: 'Questionable Sphere Community Guidelines',
   privacy: 'Questionable Sphere Privacy Policy',
-  terms: 'Questionable Sphere Terms of Use',
-  api: 'Questionable Sphere API'
+  terms: 'Questionable Sphere Terms of Use'
 };
 const HOME_TITLE = 'Questionable Sphere — A World of Questions';
 
